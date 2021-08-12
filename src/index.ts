@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 import puppeteer from 'puppeteer';
 import _ from 'lodash';
 import { Config, defaultConfig, parseConfig } from './config';
