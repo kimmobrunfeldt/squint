@@ -6,6 +6,8 @@ Squint is intended to speed up a manual visual review of a new web app release.
 The diffs will likely have false positives due to async loading or animations.
 That's ok, the main intention is not to be an automated pass / fail tool.
 
+![Example image of diff](docs/diff.png)
+
 **Goodies:**
 
 * Puppeteer under the hood
