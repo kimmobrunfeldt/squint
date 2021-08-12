@@ -98,7 +98,7 @@ Got a trick? Submit a PR!
 
     In macOS: `/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --remote-debugging-port=9222`
 
-3. `squint screenshot --puppeteer-launch-mode connect --puppeteer-launch-options '{ browserUrl: "http://localhost:9222" }' https://example.com
+3. `squint screenshot --puppeteer-launch-mode connect --puppeteer-launch-options '{ browserUrl: "http://localhost:9222" }' https://example.com`
 
 
 ### Enable very verbose Puppeteer logging
