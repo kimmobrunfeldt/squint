@@ -1,0 +1,36 @@
+{
+  "name": "squint-cli",
+  "version": "0.1.0",
+  "description": "",
+  "main": "dist/index.js",
+  "files": [
+    "dist/**/*",
+    "src/**/*"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "squint": "ts-node src/index.ts"
+  },
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/bluebird": "^3.5.36",
+    "@types/lodash": "^4.14.172",
+    "np": "^7.5.0",
+    "ts-node": "^10.2.0",
+    "typescript": "^4.3.5"
+  },
+  "dependencies": {
+    "@sindresorhus/slugify": "^1.1.2",
+    "@types/glob": "^7.1.4",
+    "arg": "^5.0.0",
+    "blink-diff": "^1.0.13",
+    "bluebird": "^3.7.2",
+    "chalk": "^4.1.2",
+    "generic-pool": "^3.8.2",
+    "glob": "^7.1.7",
+    "lodash": "^4.17.21",
+    "p-queue": "^6.6.2",
+    "puppeteer": "^10.2.0"
+  }
+}
