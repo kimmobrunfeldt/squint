@@ -13,8 +13,11 @@ export function formatHelp(defaultConfig: typeof _defaultConfig) {
       Crawl all paths from beta site and pipe output to a file. The crawler only follows site-internal links.
       {dim $ squint crawl https://beta.example.com > paths.txt}
 
-      Get screenshots of all pages in the site.
+      Get screenshot of a page.
       {dim $ squint screenshot https://beta.example.com}
+
+      Get screenshot of a single element in a page.
+      {dim $ squint screenshot --selector 'div' https://beta.example.com}
 
       Compare beta to current production, but use an existing file of paths.
       {dim $ squint compare --paths-file paths.txt https://example.com https://beta.example.com}
@@ -26,10 +29,7 @@ export function formatHelp(defaultConfig: typeof _defaultConfig) {
       {dim $ squint compare --selector '#logo' https://example.com https://beta.example.com}
 
       Compare a single element, but use JS to dig an element from the page. (page: Puppeteer.Page) => HTMLElement
-      {dim $ squint compare --selector-js '(page) => page.documentQuerySelector('#logo')' https://example.com https://beta.example.com}
-
-      Take a screenshot of an element in page, but use JS to wait until the element is visible.
-      {dim $ squint screenshot --single-page --selector '#logo' --js-after-page '(page) => page.waitFor("#logo")' https://example.com}
+      {dim $ squint compare --selector-js '(page) => page.\\$("#logo")' https://example.com https://beta.example.com}
 
   {bold COMMON OPTIONS}
 
