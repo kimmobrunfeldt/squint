@@ -1,8 +1,11 @@
 {
   "name": "squint-cli",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "",
   "main": "dist/index.js",
+  "bin": {
+    "squint": "./dist/index.js"
+  },
   "files": [
     "dist/**/*",
     "src/**/*"
