@@ -32,7 +32,9 @@ async function main() {
     process.exit(1);
   }
 
-  browser.close();
+  if (config.puppeteerLaunchMode.type === 'launch') {
+    await browser.close();
+  }
 }
 
 main().catch((err) => {
