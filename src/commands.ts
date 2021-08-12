@@ -38,7 +38,7 @@ async function compareMultiMode(pagePool: Pool<Page>, config: Config) {
   let paths;
   if (config.pathsFile) {
     const content = await fs.promises.readFile(config.pathsFile, { encoding: 'utf-8' });
-    paths = content.split('\n').map(line => line.trim());
+    paths = content.trim().split('\n').map(line => line.trim()).filter(line => Boolean(line));
   } else {
     paths = await crawlPaths({
       pagePool,

@@ -30,8 +30,11 @@ That's ok, the main intention is not to be an automated pass / fail tool.
       Crawl all paths from beta site and pipe output to a file. The crawler only follows site-internal links.
       $ squint crawl https://beta.example.com > paths.txt
 
-      Get screenshots of all pages in the site.
+      Get screenshot of a page.
       $ squint screenshot https://beta.example.com
+
+      Get screenshot of a single element in a page.
+      $ squint screenshot --selector 'div' https://beta.example.com
 
       Compare beta to current production, but use an existing file of paths.
       $ squint compare --paths-file paths.txt https://example.com https://beta.example.com
@@ -43,34 +46,41 @@ That's ok, the main intention is not to be an automated pass / fail tool.
       $ squint compare --selector '#logo' https://example.com https://beta.example.com
 
       Compare a single element, but use JS to dig an element from the page. (page: Puppeteer.Page) => HTMLElement
-      $ squint compare --selector-js '(page) => page.documentQuerySelector('#logo')' https://example.com https://beta.example.com
-
-      Take a screenshot of an element in page, but use JS to wait until the element is visible.
-      $ squint screenshot --single-page --selector '#logo' --puppeteer-js-after-page '(page) => page.waitFor("#logo")' https://example.com
+      $ squint compare --selector-js '(page) => page.\$("#logo")' https://example.com https://beta.example.com
 
   COMMON OPTIONS
 
       --help                       Shows this help message
       --include-hash               When enabled, URL hashes are not removed. Default: false
       --trailing-slash-mode        Options: preserve, remove, add. Default: preserve
-      --puppeteer-launch-method    Options: launch, connect. Default: launch
-      --puppeteer-launch-options   Puppeteer .launch or .connect options in JSON. Default: {"headless":true}
-      --puppeteer-js-after-page    Custom JS code that will be run after Puppeteer page has been created. (page: Puppeteer.Page) => Promise<void>
+      --puppeteer-launch-mode      Options: launch, connect. Default: launch
+      --puppeteer-launch-options   Puppeteer .launch or .connect options in JS. Default: {"headless":true}
+      --js                         Custom JS code that will be run after Puppeteer page.goto has been called.
+                                   (page: Puppeteer.Page) => Promise<void>
 
   COMPARE & SCREENSHOT
 
-      -w --width                 Viewport width for Puppeteer. Default: 1280
-      -h --height                Viewport height for Puppeteer. Default: 800
-      -o --out-dir               Output directory for images. Default: .squint
-      --paths-file               File of URL paths. One path per line.
-      --selector                 Selector string for document.querySelector. The first found element is used.
-      --selector-js              Selector that uses JS to dig an element. (page: Puppeteer.Page) => HTMLElement
-      --single-page              Disable automatic crawling. Only take a screenshot from single page.
-      --screenshot-options       Custom options that are passed to Puppeteer .screenshot method. Overrides other options.
+      -w --width             Viewport width for Puppeteer. Default: 1280
+      -h --height            Viewport height for Puppeteer. Default: 800
+      --paths-file           File of URL paths. One path per line.
+      --selector             Selector for document.querySelector. The first found element is used.
+                             page.waitForSelector is called to ensure the element is visible.
+      --selector-js          Selector that uses JS to dig an element. (page: Puppeteer.Page) => HTMLElement
+      --screenshot-options   Puppeteer .screenshot options in JS. Overrides other options.
+
+  COMPARE
+
+      --out-dir              Output directory for images. Default: .squint
+      --single-page          Disable automatic crawling. Only take a screenshot from single page.
+      -o --out-file          Relevant in only in single-page mode. Output file for the diff image
+
+  SCREENSHOT
+
+      -o --out-file          Output file for the screenshot
 
   CRAWL
 
-      --max-depth                Maximum depth of links to follow. Default: Infinity
+      --max-depth            Maximum depth of links to follow. Default: Infinity
 ```
 
 ## Tips & tricks
