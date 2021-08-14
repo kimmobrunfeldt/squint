@@ -1,4 +1,4 @@
-![Status badge](https://github.com/kimmobrunfeldt/squint/actions/workflows/test.yml/badge.svg?branch=main)
+[![Status badge](https://github.com/kimmobrunfeldt/squint/actions/workflows/test.yml/badge.svg?branch=main)](https://github.com/kimmobrunfeldt/squint/actions?query=branch%3Amain)
 
 # Squint
 
