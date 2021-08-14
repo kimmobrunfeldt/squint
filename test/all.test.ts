@@ -12,8 +12,8 @@ const squint = `ts-node src/index.ts ${DEBUG ? '--puppeteer-launch-options "{ he
 const baseUrl1 = `http://localhost:${PORT_1}`;
 const baseUrl2 = `http://localhost:${PORT_2}`;
 
-
-jest.setTimeout(120 * 1000);
+// Many cases run a long time
+jest.setTimeout(5 * 60 * 1000);
 
 describe('squint', () => {
   describe('case1', () => {
@@ -104,7 +104,7 @@ describe('squint', () => {
 
     it('crawl', async () => {
       const { stdout } = await exec(`${squint} crawl ${baseUrl2}`);
-      const outPaths = _.sortBy(stdout.split('\n'))
+      const outPaths = _.sortBy(stdout.trim().split('\n'))
 
       expect(outPaths).toBe(_.sortBy([
         '/',
@@ -116,7 +116,7 @@ describe('squint', () => {
 
     it('crawl with --include-hash', async () => {
       const { stdout } = await exec(`${squint} crawl ${baseUrl2} --include-hash`);
-      const outPaths = _.sortBy(stdout.split('\n'));
+      const outPaths = _.sortBy(stdout.trim().split('\n'));
 
       expect(outPaths).toBe(_.sortBy([
         '/',
@@ -172,18 +172,17 @@ describe('squint', () => {
 
     it('crawl --trailing-slash-mode preserve', async () => {
       const { stdout } = await exec(`${squint} crawl ${baseUrl1} --trailing-slash-mode preserve`);
-      const outPaths = _.sortBy(stdout.split('\n'))
+      const outPaths = _.sortBy(stdout.trim().split('\n'))
 
       expect(outPaths).toBe(_.sortBy([
-        '/',
         '/test',
         '/test/',
       ]));
     })
 
     it('crawl --trailing-slash-mode add', async () => {
-      const { stdout } = await exec(`${squint} crawl ${baseUrl1} --trailing-slash-mode add`);
-      const outPaths = _.sortBy(stdout.split('\n'))
+      const { stdout } = await exec(`${squint} crawl ${baseUrl1}/ --trailing-slash-mode add`);
+      const outPaths = _.sortBy(stdout.trim().split('\n'))
 
       expect(outPaths).toBe(_.sortBy([
         '/',
@@ -192,8 +191,8 @@ describe('squint', () => {
     })
 
     it('crawl --trailing-slash-mode remove', async () => {
-      const { stdout } = await exec(`${squint} crawl ${baseUrl1} --trailing-slash-mode remove`);
-      const outPaths = _.sortBy(stdout.split('\n'))
+      const { stdout } = await exec(`${squint} crawl ${baseUrl1}/ --trailing-slash-mode remove`);
+      const outPaths = _.sortBy(stdout.trim().split('\n'))
 
       expect(outPaths).toBe(_.sortBy([
         '/',
