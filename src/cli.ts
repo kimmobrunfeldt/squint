@@ -29,7 +29,7 @@ export function formatHelp(defaultConfig: typeof _defaultConfig) {
       {dim $ squint compare --selector '#logo' https://example.com https://beta.example.com}
 
       Compare a single element, but use JS to dig an element from the page. (page: Puppeteer.Page) => HTMLElement
-      {dim $ squint compare --selector-js '(page) => page.\\$("#logo")' https://example.com https://beta.example.com}
+      {dim $ squint compare --selector-js '(page) => page.$("#logo")' https://example.com https://beta.example.com}
 
   {bold COMMON OPTIONS}
 

@@ -122,7 +122,7 @@ Click "I agree" button to hide ToS popup before taking a screenshot. *Beware of 
 
 ```bash
 squint screenshot https://google.com --puppeteer-launch-options '{ headless: false }' --js 'async (page) => {
-  const [button] = await page.\$x(\`//button[contains(., "I agree")]\`);
+  const [button] = await page.$x(`//button[contains(., "I agree")]`);
   await button.click();
 }'
 ```
