@@ -1,3 +1,5 @@
+![Status badge](https://github.com/kimmobrunfeldt/squint/actions/workflows/test/badge.svg) *main branch*
+
 # Squint
 
 > Create visual diffs between two different versions of a web app.
