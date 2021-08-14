@@ -24,6 +24,7 @@ That's ok, the main intention is not to be an automated pass / fail tool.
 ## Usage
 
 *Auto-generated*
+
 ```bash
   EXAMPLES
 
@@ -49,7 +50,7 @@ That's ok, the main intention is not to be an automated pass / fail tool.
       $ squint compare --selector '#logo' https://example.com https://beta.example.com
 
       Compare a single element, but use JS to dig an element from the page. (page: Puppeteer.Page) => HTMLElement
-      $ squint compare --selector-js '(page) => page.\$("#logo")' https://example.com https://beta.example.com
+      $ squint compare --selector-js '(page) => page.$("#logo")' https://example.com https://beta.example.com
 
   COMMON OPTIONS
 
@@ -75,7 +76,8 @@ That's ok, the main intention is not to be an automated pass / fail tool.
 
       --out-dir              Output directory for images. Default: .squint
       --single-page          Disable automatic crawling. Only take a screenshot from single page.
-      -o --out-file          Relevant in only in single-page mode. Output file for the diff image
+      -o --out-file          Relevant in only in single-page mode. Output file for the diff image.
+      --save-all             Saves all diff image files, even if there are zero differences.
 
   SCREENSHOT
 
