@@ -23,7 +23,8 @@ That's ok, the main intention is not to be an automated pass / fail tool.
 
 ## Usage
 
-```
+*Auto-generated*
+```bash
   EXAMPLES
 
       Compare beta to current production. The whole site is automatically crawled.
@@ -83,6 +84,8 @@ That's ok, the main intention is not to be an automated pass / fail tool.
   CRAWL
 
       --max-depth            Maximum depth of links to follow. Default: Infinity
+
+
 ```
 
 ## Tips & tricks
@@ -109,7 +112,7 @@ DEBUG="puppeteer:* squint screenshot https://example.com
 
 ### Disable headless mode
 
-```
+```bash
 squint screenshot --puppeteer-launch-options '{ headless: false }' https://example.com
 ```
 
@@ -117,7 +120,7 @@ squint screenshot --puppeteer-launch-options '{ headless: false }' https://examp
 
 Click "I agree" button to hide ToS popup before taking a screenshot. *Beware of character escaping, it's fragile.*
 
-```
+```bash
 squint screenshot https://google.com --puppeteer-launch-options '{ headless: false }' --js 'async (page) => {
   const [button] = await page.\$x(\`//button[contains(., "I agree")]\`);
   await button.click();
@@ -125,8 +128,16 @@ squint screenshot https://google.com --puppeteer-launch-options '{ headless: fal
 ```
 
 
+## Maintenance tasks
 
-## Making a new release
+### Generating baseline screenshots for tests
+
+*Make sure the images are small because they are stored in git.*
+
+Run `bash tools/populate-test-data.sh` to re-generate PNG images for test cases.
+These images are the baseline, and considered to be correct results.
+
+### Making a new release
 
 ```
 bash release.sh

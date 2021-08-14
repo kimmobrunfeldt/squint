@@ -3,10 +3,11 @@ import path from 'path';
 import fs from 'fs';
 import { Page } from "puppeteer";
 import { promiseEachSeries } from "./utils";
-import { clean, compareUrls, resolveUrl } from "./core/compare";
+import { clean, compareUrls } from "./core/compare";
 import { Config } from "./config";
 import { crawlPaths, createShouldVisit } from "./core/crawl";
 import { screenshot } from './core/screenshot';
+import chalk from "chalk";
 
 export async function crawlCommand(pagePool: Pool<Page>, config: Config) {
   const paths = await crawlPaths({
@@ -51,9 +52,11 @@ async function compareMultiMode(pagePool: Pool<Page>, config: Config) {
   }
 
   await promiseEachSeries(paths, async (urlPath) => {
-    console.error(`Comparing ${urlPath} ..`)
-    const oldUrl = resolveUrl(config.oldUrl, urlPath);
-    const newUrl   = resolveUrl(config.newUrl, urlPath);
+
+    const oldUrl = new URL(urlPath, config.oldUrl).toString()
+    const newUrl = new URL(urlPath, config.newUrl).toString()
+
+    console.error(chalk`Comparing {dim ${config.oldUrl}}${urlPath} {dim to} {dim ${config.newUrl}}${urlPath} ..`)
     await compareUrls(pagePool, oldUrl, newUrl, config);
   });
 }

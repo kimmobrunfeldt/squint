@@ -55,7 +55,8 @@ export function formatHelp(defaultConfig: typeof _defaultConfig) {
 
       --out-dir              Output directory for images. Default: ${defaultConfig.outDir}
       --single-page          Disable automatic crawling. Only take a screenshot from single page.
-      -o --out-file          Relevant in only in single-page mode. Output file for the diff image
+      -o --out-file          Relevant in only in single-page mode. Output file for the diff image.
+      --save-all             Saves all diff image files, even if there are zero differences.
 
   {bold SCREENSHOT}
 
@@ -101,6 +102,7 @@ export function parseCliArgs() {
     '--selector-js': String,
     '--paths-file': String,
     '--screenshot-options': String,
+    '--save-all': Boolean,
     '--out-dir': String,
     '--out-file': String,
     '-o': '--out-file',

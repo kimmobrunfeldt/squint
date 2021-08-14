@@ -4,7 +4,6 @@ import path from 'path';
 import slugify from '@sindresorhus/slugify';
 import { URL } from 'url'
 import BPromise from 'bluebird';
-import isString from 'lodash/isString'
 import BlinkDiff from 'blink-diff';
 import fs from 'fs';
 import { promiseEachSeries } from '../utils';
@@ -18,14 +17,13 @@ import { takeScreenshot } from './screenshot';
 const slugifyWithCounter = slugify.counter();
 const globAsync = promisify(glob);
 
-type BaseUrlFormatter = (urlPath: string) => string;
 
-export function resolveUrl(baseUrl: string | BaseUrlFormatter, urlPath: string): string {
-  if (isString(baseUrl)) {
-    return new URL(urlPath, baseUrl).toString();
+async function mkdirp(dir: string) {
+  try {
+    await fs.promises.mkdir(dir, { recursive: true });
+  } catch (e) {
+    // ignore
   }
-
-  return baseUrl(urlPath);
 }
 
 export async function clean(config: Config) {
@@ -39,11 +37,7 @@ export async function clean(config: Config) {
     }
   });
 
-  try {
-    await fs.promises.mkdir(config.outDir, { recursive: true });
-  } catch (e) {
-    // ignore
-  }
+  await mkdirp(config.outDir);
 }
 
 export async function compareUrls(pagePool: Pool<Page>, oldUrl: string, newUrl: string, config: Config) {
@@ -75,10 +69,11 @@ export async function compareUrls(pagePool: Pool<Page>, oldUrl: string, newUrl: 
     await fs.promises.unlink(paths.a);
     await fs.promises.unlink(paths.b);
 
-    if (result.differences < 1) {
+    if (!config.saveAll && result.differences < 1) {
       console.error(`Found ${result.differences} differences. No diff image saved.`);
       await fs.promises.unlink(paths.diff);
     } else if (config.singlePage && config.outFile) {
+      await mkdirp(path.dirname(config.outFile));
       await fs.promises.rename(paths.diff, config.outFile);
       console.error(`Found ${result.differences} differences. Diff image saved to ${path.resolve(config.outFile)}`);
     } else {

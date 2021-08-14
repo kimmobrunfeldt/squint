@@ -3,7 +3,7 @@ import { ElementHandle, Page, ScreenshotOptions } from 'puppeteer';
 import { Pool } from 'generic-pool';
 import _ from 'lodash';
 import { Config } from '../config';
-import { evalJs } from './utils';
+import { evalJs } from '../utils';
 
 export async function screenshot(pagePool: Pool<Page>, config: Config) {
   await pagePool.use(async (page) => {

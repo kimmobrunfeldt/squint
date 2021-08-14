@@ -12,16 +12,27 @@
   ],
   "scripts": {
     "build": "tsc",
-    "squint": "ts-node src/index.ts"
+    "test": "jest",
+    "squint": "ts-node src/index.ts",
+    "updateReadmeHelp": "zx tools/updateReadmeHelp.mjs",
+    "http-server": "http-server"
   },
   "author": "",
   "license": "MIT",
   "devDependencies": {
     "@types/bluebird": "^3.5.36",
+    "@types/express": "^4.17.13",
+    "@types/jest": "^27.0.1",
     "@types/lodash": "^4.14.172",
+    "express": "^4.17.1",
+    "http-server": "^13.0.0",
+    "jest": "^27.0.6",
     "np": "^7.5.0",
+    "sharp": "^0.28.3",
+    "ts-jest": "^27.0.4",
     "ts-node": "^10.2.0",
-    "typescript": "^4.3.5"
+    "typescript": "^4.3.5",
+    "zx": "^2.1.0"
   },
   "dependencies": {
     "@sindresorhus/slugify": "^1.1.2",

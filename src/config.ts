@@ -29,6 +29,7 @@ export type Config = {
   singlePage: boolean;
   pathsFile?: string;
   screenshotOptions: ScreenshotOptions;
+  saveAll: boolean;
 
   // Positional arguments
   command: string;
@@ -43,6 +44,7 @@ export const defaultConfig = {
   height: 800,
   includeHash: false,
   trailingSlashMode: 'preserve',
+  saveAll: false,
   // This should in most cases be just 'siteInternal'
   // Removing filters would make the crawler start following
   // external links, and comparing those paths visually doesn't make sense
@@ -72,6 +74,9 @@ export function parseConfig() {
 
   const command = args['_'][0];
   const outDir = args['--out-dir'] ?? defaultConfig.outDir;
+  const defaultOutFile = command === 'compare'
+    ? path.join(outDir, 'diff.png')
+    : path.join(outDir, 'screenshot.png');
 
   const config: Config = {
     width: args['--width'] ?? defaultConfig.width,
@@ -81,7 +86,7 @@ export function parseConfig() {
     crawlFilters: defaultConfig.crawlFilters,
     maxDepth: args['--max-depth'] ?? defaultConfig.maxDepth,
     outDir,
-    outFile: args['--out-file'] ?? command === 'compare' ? path.join(outDir, 'diff.png') : path.join(outDir, 'screenshot.png'),
+    outFile: args['--out-file'] ?? defaultOutFile,
     puppeteerLaunchMode: {
       type: args['--puppeteer-launch-mode'] ?? defaultConfig.puppeteerLaunchMode.type,
       options: args['--puppeteer-launch-options'] ?? defaultConfig.puppeteerLaunchMode.options
@@ -90,6 +95,7 @@ export function parseConfig() {
     selector: args['--selector'],
     selectorJs: args['--selector-js'],
     singlePage: args['--single-page'] ?? false,
+    saveAll: args['--save-all'] ?? false,
     pathsFile: args['--paths-file'],
     screenshotOptions: args['--screenshot-options'] ?? defaultConfig.screenshotOptions,
 
