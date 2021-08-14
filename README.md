@@ -92,6 +92,11 @@ That's ok, the main intention is not to be an automated pass / fail tool.
 
 Got a trick? Submit a PR!
 
+### Failing tests with `DEBUG_TESTS=true`
+
+It seems that Puppeteer element screenshot works differently when running with `headless: false`.
+
+
 ### Connect to a Chrome session
 
 *This way you can reuse existing sessions and logins. No need to do difficult setup with cookies.*

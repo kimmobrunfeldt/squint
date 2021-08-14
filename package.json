@@ -12,7 +12,7 @@
   ],
   "scripts": {
     "build": "tsc",
-    "clean": "rm -r .tmp .squint",
+    "clean": "rm -rf .tmp .squint",
     "test": "npm run clean && jest --silent=false",
     "updateReadmeHelp": "zx tools/updateReadmeHelp.mjs",
     "http-server": "http-server"
