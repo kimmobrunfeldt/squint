@@ -17,8 +17,8 @@ export async function takeScreenshot(
 ) {
   await page.goto(url, { waitUntil: 'networkidle2' })
 
-  if (config.js) {
-    await evalJs(config.js, page)
+  if (config.afterGoto) {
+    await evalJs(config.afterGoto, page)
   }
 
   let element: ElementHandle | null = null

@@ -25,7 +25,8 @@ export type Config = {
   maxDepth: number
   outDir: string
   outFile: string
-  js?: string
+  afterGoto?: string
+  afterPage?: string
   selector?: string
   selectorJs?: string
   singlePage: boolean
@@ -99,7 +100,8 @@ export function parseConfig() {
         args['--puppeteer-launch-options'] ??
         defaultConfig.puppeteerLaunchMode.options,
     } as Config['puppeteerLaunchMode'],
-    js: args['--js'],
+    afterGoto: args['--after-goto'],
+    afterPage: args['--after-page'],
     selector: args['--selector'],
     selectorJs: args['--selector-js'],
     singlePage: args['--single-page'] ?? false,

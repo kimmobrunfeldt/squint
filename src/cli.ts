@@ -46,7 +46,9 @@ export function formatHelp(defaultConfig: typeof _defaultConfig) {
       --puppeteer-launch-options   Puppeteer .launch or .connect options in JS. Default: ${JSON.stringify(
         defaultConfig.puppeteerLaunchMode.options
       )}
-      --js                         Custom JS code that will be run after Puppeteer page.goto has been called.
+      --after-goto                 Custom JS code that will be run after Puppeteer page.goto has been called.
+                                   (page: Puppeteer.Page) => Promise<void>
+      --after-page                 Custom JS code that will be run after Puppeteer page has been created.
                                    (page: Puppeteer.Page) => Promise<void>
 
   {bold COMPARE & SCREENSHOT}
@@ -116,7 +118,8 @@ export function parseCliArgs() {
     '--max-depth': Number,
     '--puppeteer-launch-mode': String,
     '--puppeteer-launch-options': String,
-    '--js': String,
+    '--after-goto': String,
+    '--after-page': String,
     '--single-page': Boolean,
     '--selector': String,
     '--selector-js': String,

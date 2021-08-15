@@ -20,8 +20,8 @@ import _ from 'lodash'
 export const DEBUG_PUPPETEER = process.env.DEBUG_PUPPETEER === 'true'
 
 const globAsync = promisify(glob)
-const squint = `ts-node src/index.ts ${
-  DEBUG_PUPPETEER ? '--puppeteer-launch-options "{ headless: false }"' : ''
+const squint = `ts-node src/index.ts --after-page 'page => page.setDefaultNavigationTimeout(60000)' ${
+  DEBUG_PUPPETEER ? ' --puppeteer-launch-options "{ headless: false }"' : ''
 }`
 const baseUrl1 = `http://localhost:${PORT_1}`
 const baseUrl2 = `http://localhost:${PORT_2}`

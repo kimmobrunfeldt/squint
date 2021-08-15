@@ -72,7 +72,7 @@ custom JS code before Puppeteer takes a screenshot.
       --trailing-slash-mode        Options: preserve, remove, add. Default: preserve
       --puppeteer-launch-mode      Options: launch, connect. Default: launch
       --puppeteer-launch-options   Puppeteer .launch or .connect options in JS. Default: {"headless":true}
-      --js                         Custom JS code that will be run after Puppeteer page.goto has been called.
+      --after-goto                         Custom JS code that will be run after Puppeteer page.goto has been called.
                                    (page: Puppeteer.Page) => Promise<void>
 
   COMPARE & SCREENSHOT
@@ -135,7 +135,7 @@ squint screenshot --puppeteer-launch-options '{ headless: false }' https://examp
 Click "I agree" button to hide ToS popup before taking a screenshot. *Beware of character escaping, it's fragile.*
 
 ```bash
-squint screenshot https://google.com --puppeteer-launch-options '{ headless: false }' --js 'async (page) => {
+squint screenshot https://google.com --puppeteer-launch-options '{ headless: false }' --after-goto 'async (page) => {
   const [button] = await page.$x(`//button[contains(., "I agree")]`);
   await button.click();
 }'

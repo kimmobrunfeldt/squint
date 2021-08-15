@@ -1,6 +1,7 @@
 import genericPool from 'generic-pool'
 import { Browser, Page } from 'puppeteer'
 import { Config } from './config'
+import { evalJs } from './utils'
 
 export function createPagePool(browser: Browser, config: Config) {
   const factory = {
@@ -8,8 +9,8 @@ export function createPagePool(browser: Browser, config: Config) {
       const page = await browser.newPage()
       page.setViewport({ width: config.width, height: config.height })
 
-      if (process.env.NODE_ENV === 'test') {
-        await page.setDefaultNavigationTimeout(60000)
+      if (config.afterPage) {
+        await evalJs(config.afterPage, page)
       }
 
       return page
