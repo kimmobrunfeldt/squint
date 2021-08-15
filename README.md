@@ -4,6 +4,8 @@
 
 > Makes visual reviews of web app releases easy.
 
+![Example terminal usage](docs/terminal.gif)
+
 `squint compare https://prod.myapp.com https://beta.myapp.com` uses Puppeteer to:
 
 * automatically crawl all url paths from the beta version

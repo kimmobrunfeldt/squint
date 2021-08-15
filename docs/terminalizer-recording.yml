@@ -23,7 +23,7 @@ config:
   # Explicitly set the number of rows
   # or use `auto` to take the current
   # number of rows of your shell
-  rows: 19
+  rows: 20
 
   # Amount of times to repeat GIF
   # If value is -1, play once
@@ -108,14 +108,14 @@ config:
 
 # Records, feel free to edit them
 records:
-  - delay: 860
+  - delay: 995
     content: "\e[1m\e[7m%\e[27m\e[1m\e[0m                                                                                     \r \r\e]2;kimmo@Kimmos-MacBook-Pro:~/code/squint\a\e]1;~/code/squint\a"
-  - delay: 103
+  - delay: 129
     content: "\r\e[0m\e[27m\e[24m\e[J\e[01;32m➜  \e[36msquint\e[00m \e[01;34mgit:(\e[31mmain\e[34m) \e[33m✗\e[00m \e[K\e[?1h\e=\e[?2004h"
   - delay: 15
     content: s
   - delay: 15
-    content: "\bsq"
+    content: "q"
   - delay: 15
     content: u
   - delay: 15
@@ -142,119 +142,39 @@ records:
     content: e
   - delay: 15
     content: ' '
-  - delay: 15
-    content: h
-  - delay: 15
-    content: t
-  - delay: 15
-    content: t
-  - delay: 15
-    content: p
-  - delay: 15
-    content: ':'
-  - delay: 15
-    content: /
-  - delay: 15
-    content: /
-  - delay: 15
-    content: l
-  - delay: 15
-    content: o
-  - delay: 15
-    content: c
-  - delay: 15
-    content: a
-  - delay: 15
-    content: l
-  - delay: 15
-    content: h
-  - delay: 15
-    content: o
-  - delay: 15
-    content: s
-  - delay: 15
-    content: t
-  - delay: 15
-    content: ':'
-  - delay: 15
-    content: '4'
-  - delay: 15
-    content: '0'
-  - delay: 15
-    content: '0'
-  - delay: 15
-    content: '0'
-  - delay: 15
+  - delay: 800
+    content: https://prod.myapp.com
+  - delay: 400
     content: ' '
-  - delay: 15
-    content: h
-  - delay: 15
-    content: t
-  - delay: 15
-    content: t
-  - delay: 15
-    content: p
-  - delay: 15
-    content: ':'
-  - delay: 15
-    content: /
-  - delay: 15
-    content: /
-  - delay: 15
-    content: l
-  - delay: 15
-    content: o
-  - delay: 15
-    content: c
-  - delay: 15
-    content: a
-  - delay: 15
-    content: l
-  - delay: 15
-    content: h
-  - delay: 15
-    content: o
-  - delay: 15
-    content: s
-  - delay: 15
-    content: t
-  - delay: 15
-    content: ':'
-  - delay: 15
-    content: '4'
-  - delay: 15
-    content: '0'
-  - delay: 15
-    content: '0'
-  - delay: 15
-    content: '1'
-  - delay: 15
-    content: "\e[?1l\e>\e[?2004l\r\r\n\e]2;squint compare http://localhost:4000 http://localhost:4001\a\e]1;squint\a"
-  - delay: 670
+  - delay: 800
+    content: https://beta.myapp.com
+  - delay: 405
+    content: "\e[?1l\e>\e[?2004l\r\r\n\e]2;squint compare https://prod.myapp.com https://beta.myapp.com\a\e]1;squint\a"
+  - delay: 691
     content: "Cleaning output directory ..\r\n"
-  - delay: 1385
-    content: "\e[2mVisited http://localhost:4001\e[22m\r\n"
-  - delay: 748
-    content: "\e[2mVisited http://localhost:4001/about-us\e[22m\r\n"
-  - delay: 410
-    content: "\e[2mVisited http://localhost:4001/blog\e[22m\r\n\e[2mVisited http://localhost:4001/company\e[22m\r\n"
-  - delay: 876
-    content: "\e[2mVisited http://localhost:4001/\e[22m\r\n"
-  - delay: 100
-    content: "\e[2mVisited http://localhost:4001/company\e[22m\r\nComparing / ..\r\n"
-  - delay: 1249
-    content: "Found 811 differences. Diff image saved to .squint/diff.png\r\nComparing /about-us ..\r\n"
-  - delay: 1215
-    content: "Found 0 differences. No diff image saved.\r\nComparing /blog ..\r\n"
-  - delay: 1222
-    content: "Found 3248 differences. Diff image saved to .squint/diff-blog.png\r\nComparing /company ..\r\n"
-  - delay: 1221
+  - delay: 1462
+    content: "\e[2mVisited https://beta.myapp.com\e[22m\r\n"
+  - delay: 679
+    content: "\e[2mVisited https://beta.myapp.com/about-us\e[22m\r\n"
+  - delay: 467
+    content: "\e[2mVisited https://beta.myapp.com/company\e[22m\r\n\e[2mVisited https://beta.myapp.com/blog\e[22m\r\n"
+  - delay: 887
+    content: "\e[2mVisited https://beta.myapp.com/\e[22m\r\n"
+  - delay: 82
+    content: "\e[2mVisited https://beta.myapp.com/company\e[22m\r\nComparing \e[2mhttps://prod.myapp.com\e[22m/ \e[2mto\e[22m \e[2mhttps://beta.myapp.com\e[22m/ ..\r\n"
+  - delay: 1998
+    content: "Found 811 differences. Diff image saved to .squint/diff.png\r\nComparing \e[2mhttps://prod.myapp.com\e[22m/about-us \e[2mto\e[22m \e[2mhttps://beta.myapp.com\e[22m/about-us ..\r\n"
+  - delay: 1784
+    content: "Found 0 differences. No diff image saved.\r\nComparing \e[2mhttps://prod.myapp.com\e[22m/company \e[2mto\e[22m \e[2mhttps://beta.myapp.com\e[22m/company ..\r\n"
+  - delay: 1839
     content: "Found 0 differences. No diff image saved.\r\n"
-  - delay: 6
-    content: "Saved comparison images to /Users/kimmo/code/squint/.squint\r\n"
-  - delay: 60
+  - delay: 5
+    content: "Comparing \e[2mhttps://prod.myapp.com\e[22m/blog \e[2mto\e[22m \e[2mhttps://beta.myapp.com\e[22m/blog ..\r\n"
+  - delay: 1762
+    content: "Found 3248 differences. Diff image saved to .squint/diff-blog.png\r\nSaved comparison images to /Users/kimmo/code/squint/.squint\r\n"
+  - delay: 65
     content: "\e[1m\e[7m%\e[27m\e[1m\e[0m                                                                                     \r \r\e]2;kimmo@Kimmos-MacBook-Pro:~/code/squint\a\e]1;~/code/squint\a"
-  - delay: 107
+  - delay: 136
     content: "\r\e[0m\e[27m\e[24m\e[J\e[01;32m➜  \e[36msquint\e[00m \e[01;34mgit:(\e[31mmain\e[34m) \e[33m✗\e[00m \e[K\e[?1h\e=\e[?2004h"
-  - delay: 3186
+  - delay: 1787
     content: "\e[?2004l\r\r\n"
