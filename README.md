@@ -4,11 +4,11 @@
 
 > Makes visual reviews of web app releases easy.
 
-`squint compare` uses Puppeteer to:
+`squint compare https://prod.myapp.com https://beta.myapp.com` uses Puppeteer to:
 
-* automatically crawl all url paths from a web app
-* take screenshots of each page from A and B versions of the app
-* output all diff images that had changes into a directory
+* automatically crawl all url paths from the beta version
+* take screenshots of each page from prod and beta versions of the app
+* output all diff images for pages that had visual differences
 
 That's the main intended use case. The diffs will likely
 have false positives due to async loading or animations. That's ok,
@@ -29,6 +29,19 @@ custom JS code before Puppeteer takes a screenshot.
 * Supports connecting to your local Chrome, with its existing logins and sessions. No need to deal with cookies in code.
 
 ![Example image of diff](docs/diff.png)
+
+## Known limitations
+
+The path structure needs to be 1-to-1 match between the two sites. If you have preview builds for example under
+`https://prod.myapp.com/previews/123/...`, this won't work automatically. The workaround is to use a [proxy](https://www.npmjs.com/package/http-proxy-cli):
+
+```bash
+http-proxy -p 8080 https://prod.myapp.com/previews/123/ &
+PID=$!
+squint compare https://prod.myapp.com/ http://localhost:8080
+
+kill $PID
+```
 
 ## Install
 
