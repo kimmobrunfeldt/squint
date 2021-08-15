@@ -76,8 +76,9 @@ export async function blinkDiff(aImgPath: string, bImgPath: string) {
     imageAPath: aImgPath,
     imageBPath: bImgPath,
     thresholdType: BlinkDiff.THRESHOLD_PERCENT,
-    // Very low because test cases should render very similar results
-    threshold: 0.0001,
+    // Test cases should render very similar results, but different OS
+    // platforms render fonts differently
+    threshold: 0.01, // 1%
     imageOutputPath: tmpPath,
   })
   // stdlib util.promisify didn't work
