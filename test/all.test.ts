@@ -41,7 +41,7 @@ describe('squint', () => {
       server.close()
     })
 
-    it.only('screenshot with default save location', async () => {
+    it('screenshot with default save location', async () => {
       await exec(`${squint} screenshot ${baseUrl1}/old`)
       const { diff, result } = await blinkDiff(
         getResourcePath('case1/img/screenshot/old.png'),
