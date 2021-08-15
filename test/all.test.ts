@@ -18,9 +18,10 @@ import _ from 'lodash'
 
 // This is a separate flag
 export const DEBUG_PUPPETEER = process.env.DEBUG_PUPPETEER === 'true'
+const IS_WINDOWS = process.platform === 'win32'
 
 const globAsync = promisify(glob)
-const squint = `ts-node src/index.ts --after-page 'page => page.setDefaultNavigationTimeout(60000)'${
+const squint = `ts-node src/index.ts --after-page "page => page.setDefaultNavigationTimeout(60000)"${
   DEBUG_PUPPETEER ? ' --puppeteer-launch-options "{ headless: false }"' : ''
 }`
 const baseUrl1 = `http://localhost:${PORT_1}`
@@ -86,7 +87,9 @@ describe('squint', () => {
     it('screenshot --selector-js', async () => {
       const tmpFile = getRandomTmpPath('nonexistent/shot.png')
       await exec(
-        `${squint} screenshot ${baseUrl1}/old --selector-js '(page) => page.$("h1")' --out-file ${tmpFile}`
+        IS_WINDOWS
+          ? `${squint} screenshot ${baseUrl1}/old --selector-js "(page) => page.\`$('h1')" --out-file ${tmpFile}`
+          : `${squint} screenshot ${baseUrl1}/old --selector-js '(page) => page.$("h1")' --out-file ${tmpFile}`
       )
       const { diff, result } = await blinkDiff(
         getResourcePath('case1/img/screenshot/old-h1-js.png'),
@@ -258,7 +261,9 @@ describe('squint', () => {
     it('--puppeteer-launch-options syntax', async () => {
       await expect(
         exec(
-          `${squint} screenshot ${baseUrl1} --puppeteer-launch-options '{"baseURL: "http://localhost:9000" }'`
+          IS_WINDOWS
+            ? `${squint} screenshot ${baseUrl1} --puppeteer-launch-options "{\`"baseURL: \`"http://localhost:9000\`" }"`
+            : `${squint} screenshot ${baseUrl1} --puppeteer-launch-options '{"baseURL: "http://localhost:9000" }'`
         )
       ).rejects.toThrow()
     })
