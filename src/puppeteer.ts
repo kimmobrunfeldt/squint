@@ -7,6 +7,11 @@ export function createPagePool(browser: Browser, config: Config) {
     create: async () => {
       const page = await browser.newPage()
       page.setViewport({ width: config.width, height: config.height })
+
+      if (process.env.NODE_ENV === 'test') {
+        await page.setDefaultNavigationTimeout(60000)
+      }
+
       return page
     },
     destroy: (page: Page) => page.close(),
