@@ -1,43 +1,45 @@
-import path from 'path';
+import path from 'path'
 import _ from 'lodash'
-import puppeteer, { ScreenshotOptions} from 'puppeteer';
-import { formatHelp, parseCliArgs } from './cli';
+import puppeteer, { ScreenshotOptions } from 'puppeteer'
+import { formatHelp, parseCliArgs } from './cli'
 
-export type puppeteerLaunchMode = {
-  type: 'connect',
-  options: Parameters<typeof puppeteer.connect>[0];
-} | {
-  type: 'launch',
-  options?: Parameters<typeof puppeteer.launch>[0];
-};
+export type puppeteerLaunchMode =
+  | {
+      type: 'connect'
+      options: Parameters<typeof puppeteer.connect>[0]
+    }
+  | {
+      type: 'launch'
+      options?: Parameters<typeof puppeteer.launch>[0]
+    }
 
 export type CrawlFilter = 'siteInternal'
 
 export type Config = {
-  width: number;
-  height: number;
-  includeHash: boolean;
-  crawlFilters: CrawlFilter[];
-  trailingSlashMode: 'preserve' | 'remove' | 'add';
-  puppeteerLaunchMode: puppeteerLaunchMode;
-  maxDepth: number;
-  outDir: string;
-  outFile: string;
-  js?: string;
-  selector?: string;
-  selectorJs?: string;
-  singlePage: boolean;
-  pathsFile?: string;
-  screenshotOptions: ScreenshotOptions;
-  saveAll: boolean;
+  width: number
+  height: number
+  includeHash: boolean
+  crawlFilters: CrawlFilter[]
+  trailingSlashMode: 'preserve' | 'remove' | 'add'
+  puppeteerLaunchMode: puppeteerLaunchMode
+  maxDepth: number
+  outDir: string
+  outFile: string
+  js?: string
+  selector?: string
+  selectorJs?: string
+  singlePage: boolean
+  pathsFile?: string
+  screenshotOptions: ScreenshotOptions
+  saveAll: boolean
 
   // Positional arguments
-  command: string;
-  oldUrl: string;
-  newUrl: string;
-  crawlUrl: string;
-  screenshotUrl: string;
-};
+  command: string
+  oldUrl: string
+  newUrl: string
+  crawlUrl: string
+  screenshotUrl: string
+}
 
 export const defaultConfig = {
   width: 1280,
@@ -54,50 +56,57 @@ export const defaultConfig = {
     type: 'launch' as const,
     options: {
       headless: true,
-    }
+    },
   },
   outDir: '.squint',
   screenshotOptions: {},
 }
 
 function isEmptyArgument(val: any): boolean {
-  return !_.isString(val) || val.length < 1;
+  return !_.isString(val) || val.length < 1
 }
 
 export function parseConfig() {
-  const args = parseCliArgs();
+  const args = parseCliArgs()
 
   if (args['--help']) {
-    console.error(formatHelp(defaultConfig));
-    process.exit(0);
+    console.error(formatHelp(defaultConfig))
+    process.exit(0)
   }
 
-  const command = args['_'][0];
-  const outDir = args['--out-dir'] ?? defaultConfig.outDir;
-  const defaultOutFile = command === 'compare'
-    ? path.join(outDir, 'diff.png')
-    : path.join(outDir, 'screenshot.png');
+  const command = args['_'][0]
+  const outDir = args['--out-dir'] ?? defaultConfig.outDir
+  const defaultOutFile =
+    command === 'compare'
+      ? path.join(outDir, 'diff.png')
+      : path.join(outDir, 'screenshot.png')
 
   const config: Config = {
     width: args['--width'] ?? defaultConfig.width,
     height: args['--height'] ?? defaultConfig.height,
     includeHash: args['--include-hash'] ?? defaultConfig.includeHash,
-    trailingSlashMode: args['--trailing-slash-mode'] ?? defaultConfig.trailingSlashMode,
+    trailingSlashMode:
+      args['--trailing-slash-mode'] ?? defaultConfig.trailingSlashMode,
     crawlFilters: defaultConfig.crawlFilters,
     maxDepth: args['--max-depth'] ?? defaultConfig.maxDepth,
     outDir,
     outFile: args['--out-file'] ?? defaultOutFile,
     puppeteerLaunchMode: {
-      type: args['--puppeteer-launch-mode'] ?? defaultConfig.puppeteerLaunchMode.type,
-      options: args['--puppeteer-launch-options'] ?? defaultConfig.puppeteerLaunchMode.options
-    } as Config["puppeteerLaunchMode"],
+      type:
+        args['--puppeteer-launch-mode'] ??
+        defaultConfig.puppeteerLaunchMode.type,
+      options:
+        args['--puppeteer-launch-options'] ??
+        defaultConfig.puppeteerLaunchMode.options,
+    } as Config['puppeteerLaunchMode'],
     js: args['--js'],
     selector: args['--selector'],
     selectorJs: args['--selector-js'],
     singlePage: args['--single-page'] ?? false,
     saveAll: args['--save-all'] ?? false,
     pathsFile: args['--paths-file'],
-    screenshotOptions: args['--screenshot-options'] ?? defaultConfig.screenshotOptions,
+    screenshotOptions:
+      args['--screenshot-options'] ?? defaultConfig.screenshotOptions,
 
     // Positional arguments
     command,
@@ -105,7 +114,7 @@ export function parseConfig() {
     newUrl: args['_'][2],
     crawlUrl: args['_'][1],
     screenshotUrl: args['_'][1],
-  };
+  }
 
   if (config.command === 'crawl' && isEmptyArgument(config.screenshotUrl)) {
     throw new Error(`Command crawl missing a <url> argument`)
@@ -131,5 +140,5 @@ export function parseConfig() {
     }
   }
 
-  return config;
+  return config
 }

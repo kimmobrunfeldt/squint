@@ -1,71 +1,77 @@
-import path from 'path';
-import crypto from 'crypto';
-import http from 'http';
-import express from 'express';
-import fs from 'fs';
-import { promisify } from 'util';
-import BlinkDiff from 'blink-diff';
-import child_process from 'child_process';
-import BPromise from 'bluebird';
-import { mkdirp } from '../../src/utils';
+import path from 'path'
+import crypto from 'crypto'
+import http from 'http'
+import express from 'express'
+import fs from 'fs'
+import { promisify } from 'util'
+import BlinkDiff from 'blink-diff'
+import child_process from 'child_process'
+import BPromise from 'bluebird'
+import { mkdirp } from '../../src/utils'
 
-export const PORT_1 = 23010;
-export const PORT_2 = 23011;
-export const DEBUG = process.env.DEBUG_TESTS === 'true';
+export const PORT_1 = 23010
+export const PORT_2 = 23011
+export const DEBUG = process.env.DEBUG_TESTS === 'true'
 
 export function log(...args: any) {
-  if (!DEBUG) return;
+  if (!DEBUG) return
 
-  console.log(...args);
+  console.log(...args)
 }
 
 export function getTmpPath(relativePath: string): string {
-  return path.join(__dirname, '../../.tmp/', relativePath);
+  return path.join(__dirname, '../../.tmp/', relativePath)
 }
 
 export function getRandomTmpPath(relativePath: string): string {
-  const newPath = `${crypto.randomBytes(10).toString('hex')}-${relativePath}`;
-  return getTmpPath(newPath);
+  const newPath = `${crypto.randomBytes(10).toString('hex')}-${relativePath}`
+  return getTmpPath(newPath)
 }
 
 export function getResourcePath(name: string) {
-  return path.join(__dirname, '../resources', name);
+  return path.join(__dirname, '../resources', name)
 }
 
-export async function startFileServer(dirPath: string, port: number, mapping?: Record<string, string>) {
-  console.log('Serving files from', dirPath, 'at port', port);
-  const app = express();
+export async function startFileServer(
+  dirPath: string,
+  port: number,
+  mapping?: Record<string, string>
+) {
+  console.log('Serving files from', dirPath, 'at port', port)
+  const app = express()
 
   if (mapping) {
-    app.enable('strict routing');
+    app.enable('strict routing')
 
-    Object.keys(mapping).forEach(key => {
-      log('GET', key, '->', mapping[key]);
+    Object.keys(mapping).forEach((key) => {
+      log('GET', key, '->', mapping[key])
       app.use(key, async (req, res) => {
-        res.contentType(path.basename(mapping[key]));
-        const content = await fs.promises.readFile(mapping[key], { encoding: 'utf-8' });
-        res.send(content);
-      });
-    });
+        res.contentType(path.basename(mapping[key]))
+        const content = await fs.promises.readFile(mapping[key], {
+          encoding: 'utf-8',
+        })
+        res.send(content)
+      })
+    })
   } else {
-    log('GET *', '->', `${dirPath}*`);
-    app.use('/', express.static(dirPath, { extensions: ['html'] }));
+    log('GET *', '->', `${dirPath}*`)
+    app.use('/', express.static(dirPath, { extensions: ['html'] }))
   }
 
   return new Promise((resolve, reject) => {
-    let server = app.listen(port);
+    const server = app.listen(port)
     server.once('listening', () => resolve(server))
-    server.once('error', reject);
-  }) as Promise<http.Server>;
+    server.once('error', reject)
+  }) as Promise<http.Server>
 }
 
-export const exec = promisify(child_process.exec);
+export const exec = promisify(child_process.exec)
 
 export async function blinkDiff(aImgPath: string, bImgPath: string) {
-  const tmpPath = getRandomTmpPath('squint-test-diff.png');
-  await mkdirp(path.dirname(tmpPath));
+  const tmpPath = getRandomTmpPath('squint-test-diff.png')
+  await mkdirp(path.dirname(tmpPath))
 
-  log('Comparing', aImgPath, 'to', bImgPath);
+  log('Comparing', aImgPath, 'to', bImgPath)
   const diff = new BlinkDiff({
     imageAPath: aImgPath,
     imageBPath: bImgPath,
@@ -73,18 +79,18 @@ export async function blinkDiff(aImgPath: string, bImgPath: string) {
     // Very low because test cases should render very similar results
     threshold: 0.0001,
     imageOutputPath: tmpPath,
-  });
+  })
   // stdlib util.promisify didn't work
-  const promisifiedDiff = BPromise.promisifyAll(diff);
-  const result = await promisifiedDiff.runAsync();
+  const promisifiedDiff = BPromise.promisifyAll(diff)
+  const result = await promisifiedDiff.runAsync()
 
-  log('Found', result.differences, 'differences');
+  log('Found', result.differences, 'differences')
 
   if (!DEBUG) {
-    await fs.promises.unlink(tmpPath);
+    await fs.promises.unlink(tmpPath)
   } else {
-    log(`Saved diff output to ${tmpPath}`);
+    log(`Saved diff output to ${tmpPath}`)
   }
 
-  return { diff, result };
+  return { diff, result }
 }

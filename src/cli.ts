@@ -1,7 +1,7 @@
-import arg from 'arg';
-import chalk from 'chalk';
-import _ from 'lodash';
-import { defaultConfig as _defaultConfig, Config } from './config';
+import arg from 'arg'
+import chalk from 'chalk'
+import _ from 'lodash'
+import { defaultConfig as _defaultConfig, Config } from './config'
 
 export function formatHelp(defaultConfig: typeof _defaultConfig) {
   const helpMessage = chalk`
@@ -34,17 +34,29 @@ export function formatHelp(defaultConfig: typeof _defaultConfig) {
   {bold COMMON OPTIONS}
 
       --help                       Shows this help message
-      --include-hash               When enabled, URL hashes are not removed. Default: ${defaultConfig.includeHash}
-      --trailing-slash-mode        Options: preserve, remove, add. Default: ${defaultConfig.trailingSlashMode}
-      --puppeteer-launch-mode      Options: launch, connect. Default: ${defaultConfig.puppeteerLaunchMode.type}
-      --puppeteer-launch-options   Puppeteer .launch or .connect options in JS. Default: ${JSON.stringify(defaultConfig.puppeteerLaunchMode.options)}
+      --include-hash               When enabled, URL hashes are not removed. Default: ${
+        defaultConfig.includeHash
+      }
+      --trailing-slash-mode        Options: preserve, remove, add. Default: ${
+        defaultConfig.trailingSlashMode
+      }
+      --puppeteer-launch-mode      Options: launch, connect. Default: ${
+        defaultConfig.puppeteerLaunchMode.type
+      }
+      --puppeteer-launch-options   Puppeteer .launch or .connect options in JS. Default: ${JSON.stringify(
+        defaultConfig.puppeteerLaunchMode.options
+      )}
       --js                         Custom JS code that will be run after Puppeteer page.goto has been called.
                                    (page: Puppeteer.Page) => Promise<void>
 
   {bold COMPARE & SCREENSHOT}
 
-      -w --width             Viewport width for Puppeteer. Default: ${defaultConfig.width}
-      -h --height            Viewport height for Puppeteer. Default: ${defaultConfig.height}
+      -w --width             Viewport width for Puppeteer. Default: ${
+        defaultConfig.width
+      }
+      -h --height            Viewport height for Puppeteer. Default: ${
+        defaultConfig.height
+      }
       --paths-file           File of URL paths. One path per line.
       --selector             Selector for document.querySelector. The first found element is used.
                              page.waitForSelector is called to ensure the element is visible.
@@ -53,7 +65,9 @@ export function formatHelp(defaultConfig: typeof _defaultConfig) {
 
   {bold COMPARE}
 
-      --out-dir              Output directory for images. Default: ${defaultConfig.outDir}
+      --out-dir              Output directory for images. Default: ${
+        defaultConfig.outDir
+      }
       --single-page          Disable automatic crawling. Only take a screenshot from single page.
       -o --out-file          Relevant in only in single-page mode. Output file for the diff image.
       --save-all             Saves all diff image files, even if there are zero differences.
@@ -64,23 +78,29 @@ export function formatHelp(defaultConfig: typeof _defaultConfig) {
 
   {bold CRAWL}
 
-      --max-depth            Maximum depth of links to follow. Default: ${defaultConfig.maxDepth}
+      --max-depth            Maximum depth of links to follow. Default: ${
+        defaultConfig.maxDepth
+      }
 
-`;
-  return helpMessage;
+`
+  return helpMessage
 }
 
 function assertOneOf(args: any, flag: string, allowed: string[]): void {
   if (_.isString(args[flag]) && !allowed.includes(args[flag])) {
-    throw new Error(`Invalid value for ${flag}: '${args[flag]}'. Should be one of ${allowed.join(', ')}.`);
+    throw new Error(
+      `Invalid value for ${flag}: '${
+        args[flag]
+      }'. Should be one of ${allowed.join(', ')}.`
+    )
   }
 }
 
 function parseJsDataFlag(args: any, flag: string): any {
   try {
-    args[flag] = eval(`(() => { return ${args[flag]}; })()`);
+    args[flag] = eval(`(() => { return ${args[flag]}; })()`)
   } catch (e) {
-    throw new Error(`Unable to \`eval\` ${flag}: ${e}`);
+    throw new Error(`Unable to \`eval\` ${flag}: ${e}`)
   }
 }
 
@@ -106,18 +126,18 @@ export function parseCliArgs() {
     '--out-dir': String,
     '--out-file': String,
     '-o': '--out-file',
-  });
+  })
 
-  assertOneOf(args, '--trailing-slash-mode', ['preserve', 'add', 'remove']);
-  assertOneOf(args, '--puppeteer-launch-mode', ['launch', 'connect']);
-  parseJsDataFlag(args, '--puppeteer-launch-options');
-  parseJsDataFlag(args, '--screenshot-options');
+  assertOneOf(args, '--trailing-slash-mode', ['preserve', 'add', 'remove'])
+  assertOneOf(args, '--puppeteer-launch-mode', ['launch', 'connect'])
+  parseJsDataFlag(args, '--puppeteer-launch-options')
+  parseJsDataFlag(args, '--screenshot-options')
 
   return args as typeof args & {
-    '--trailing-slash-mode': Config["trailingSlashMode"],
-    '--puppeteer-launch-mode': Config["puppeteerLaunchMode"]["type"],
+    '--trailing-slash-mode': Config['trailingSlashMode']
+    '--puppeteer-launch-mode': Config['puppeteerLaunchMode']['type']
     // No additional runtime validation made
-    '--puppeteer-launch-options': Config["puppeteerLaunchMode"]["options"],
-    '--screenshotOptions': Config["screenshotOptions"],
-  };
+    '--puppeteer-launch-options': Config['puppeteerLaunchMode']['options']
+    '--screenshotOptions': Config['screenshotOptions']
+  }
 }
