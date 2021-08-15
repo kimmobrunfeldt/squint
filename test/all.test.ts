@@ -3,12 +3,15 @@ import glob from 'glob';
 import sharp from 'sharp';
 import http from 'http';
 import { promisify } from 'util';
-import { DEBUG, PORT_1, PORT_2, getResourcePath, startFileServer, exec, blinkDiff, getTmpPath, getRandomTmpPath } from "./utils"
+import { log, DEBUG, PORT_1, PORT_2, getResourcePath, startFileServer, exec, blinkDiff, getTmpPath, getRandomTmpPath } from "./utils"
 import { promiseEachSeries } from '../src/utils';
 import _ from 'lodash';
 
+// This is a separate flag
+export const DEBUG_PUPPETEER = process.env.DEBUG_PUPPETEER === 'true';
+
 const globAsync = promisify(glob);
-const squint = `ts-node src/index.ts ${DEBUG ? '--puppeteer-launch-options "{ headless: false }"' : ''}`;
+const squint = `ts-node src/index.ts ${DEBUG_PUPPETEER ? '--puppeteer-launch-options "{ headless: false }"' : ''}`;
 const baseUrl1 = `http://localhost:${PORT_1}`;
 const baseUrl2 = `http://localhost:${PORT_2}`;
 
@@ -27,10 +30,10 @@ describe('squint', () => {
       server.close();
     });
 
-    it('screenshot old.html with default save location for screenshot image', async () => {
+    it.only('screenshot old.html with default save location for screenshot image', async () => {
       await exec(`${squint} screenshot ${baseUrl1}/old`);
       const { diff, result } = await blinkDiff(getResourcePath('case1/img/screenshot/old.png'), '.squint/screenshot.png');
-      expect(diff.hasPassed(result.code)).toBe(true);
+      expect(diff.hasPassed(result.code)).toStrictEqual(true);
     })
 
     it('screenshot new.html with -o save location', async () => {
@@ -38,41 +41,41 @@ describe('squint', () => {
       // Test that --out-file works and creates the path if necessary
       await exec(`${squint} screenshot ${baseUrl1}/new -o ${tmpPath}`);
       const { diff, result } = await blinkDiff(getResourcePath('case1/img/screenshot/new.png'), tmpPath);
-      expect(diff.hasPassed(result.code)).toBe(true);
+      expect(diff.hasPassed(result.code)).toStrictEqual(true);
     })
 
     it('screenshot --out-file', async () => {
       const tmpFile = getRandomTmpPath('nonexisting/path/should/be/created/shot.png');
       await exec(`${squint} screenshot ${baseUrl1}/old --out-file ${tmpFile}`);
       const { diff, result } = await blinkDiff(getResourcePath('case1/img/screenshot/old.png'), tmpFile);
-      expect(diff.hasPassed(result.code)).toBe(true);
+      expect(diff.hasPassed(result.code)).toStrictEqual(true);
     })
 
     it('screenshot --selector', async () => {
       const tmpFile = getRandomTmpPath('nonexisting/path/should/be/created/shot.png');
       await exec(`${squint} screenshot ${baseUrl1}/old --selector 'h1' --out-file ${tmpFile}`);
       const { diff, result } = await blinkDiff(getResourcePath('case1/img/screenshot/old-h1.png'), tmpFile);
-      expect(diff.hasPassed(result.code)).toBe(true);
+      expect(diff.hasPassed(result.code)).toStrictEqual(true);
     })
 
     it('screenshot --selector-js', async () => {
       const tmpFile = getRandomTmpPath('nonexisting/path/should/be/created/shot.png');
       await exec(`${squint} screenshot ${baseUrl1}/old --selector-js '(page) => page.$("h1")' --out-file ${tmpFile}`);
       const { diff, result } = await blinkDiff(getResourcePath('case1/img/screenshot/old-h1-js.png'), tmpFile);
-      expect(diff.hasPassed(result.code)).toBe(true);
+      expect(diff.hasPassed(result.code)).toStrictEqual(true);
     })
 
     it('screenshot with exact -w and -h', async () => {
       await exec(`${squint} screenshot ${baseUrl1}/old -w 100 -h 301`);
       const metadata = await sharp('.squint/screenshot.png').metadata();
-      expect(metadata.width).toBe(100);
-      expect(metadata.height).toBe(301);
+      expect(metadata.width).toStrictEqual(100);
+      expect(metadata.height).toStrictEqual(301);
     })
 
     it('compare with default save location for diff image', async () => {
       await exec(`${squint} compare ${baseUrl1}/old ${baseUrl1}/new --single-page`);
       const { diff, result } = await blinkDiff(getResourcePath('case1/img/compare/diff.png'), '.squint/diff.png');
-      expect(diff.hasPassed(result.code)).toBe(true);
+      expect(diff.hasPassed(result.code)).toStrictEqual(true);
     });
   });
 
@@ -98,7 +101,7 @@ describe('squint', () => {
         const basename = path.basename(file);
         const resourcePath = getResourcePath(`case2/img/compare/${basename}`);
         const { diff, result } = await blinkDiff(resourcePath, file);
-        expect(diff.hasPassed(result.code)).toBe(true);
+        expect(diff.hasPassed(result.code)).toStrictEqual(true);
       });
     })
 
@@ -106,7 +109,7 @@ describe('squint', () => {
       const { stdout } = await exec(`${squint} crawl ${baseUrl2}`);
       const outPaths = _.sortBy(stdout.trim().split('\n'))
 
-      expect(outPaths).toBe(_.sortBy([
+      expect(outPaths).toStrictEqual(_.sortBy([
         '/',
         '/about-us',
         '/company',
@@ -118,7 +121,7 @@ describe('squint', () => {
       const { stdout } = await exec(`${squint} crawl ${baseUrl2} --include-hash`);
       const outPaths = _.sortBy(stdout.trim().split('\n'));
 
-      expect(outPaths).toBe(_.sortBy([
+      expect(outPaths).toStrictEqual(_.sortBy([
         '/',
         '/about-us',
         '/company',
@@ -150,7 +153,7 @@ describe('squint', () => {
         '/3',
       ]
 
-      expect(stdout).toBe(`${paths.join('\n')}\n`);
+      expect(stdout).toStrictEqual(`${paths.join('\n')}\n`);
     })
   })
 
@@ -174,7 +177,8 @@ describe('squint', () => {
       const { stdout } = await exec(`${squint} crawl ${baseUrl1} --trailing-slash-mode preserve`);
       const outPaths = _.sortBy(stdout.trim().split('\n'))
 
-      expect(outPaths).toBe(_.sortBy([
+      expect(outPaths).toStrictEqual(_.sortBy([
+        '/',
         '/test',
         '/test/',
       ]));
@@ -184,7 +188,7 @@ describe('squint', () => {
       const { stdout } = await exec(`${squint} crawl ${baseUrl1}/ --trailing-slash-mode add`);
       const outPaths = _.sortBy(stdout.trim().split('\n'))
 
-      expect(outPaths).toBe(_.sortBy([
+      expect(outPaths).toStrictEqual(_.sortBy([
         '/',
         '/test/',
       ]));
@@ -194,7 +198,7 @@ describe('squint', () => {
       const { stdout } = await exec(`${squint} crawl ${baseUrl1}/ --trailing-slash-mode remove`);
       const outPaths = _.sortBy(stdout.trim().split('\n'))
 
-      expect(outPaths).toBe(_.sortBy([
+      expect(outPaths).toStrictEqual(_.sortBy([
         '/',
         '/test',
       ]));

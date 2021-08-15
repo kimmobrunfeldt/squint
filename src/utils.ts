@@ -1,3 +1,4 @@
+import fs from 'fs';
 import _ from "lodash";
 
 // https://github.com/sindresorhus/p-each-series/blob/main/license
@@ -40,4 +41,12 @@ export async function evalJs(code: string, ...args: any[]): Promise<any> {
   }
 
   return result;
+}
+
+export async function mkdirp(dir: string) {
+  try {
+    await fs.promises.mkdir(dir, { recursive: true });
+  } catch (e) {
+    // ignore
+  }
 }

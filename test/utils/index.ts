@@ -7,10 +7,17 @@ import { promisify } from 'util';
 import BlinkDiff from 'blink-diff';
 import child_process from 'child_process';
 import BPromise from 'bluebird';
+import { mkdirp } from '../../src/utils';
 
 export const PORT_1 = 10000;
 export const PORT_2 = 10001;
 export const DEBUG = process.env.DEBUG_TESTS === 'true';
+
+export function log(...args: any) {
+  if (!DEBUG) return;
+
+  console.log(...args);
+}
 
 export function getTmpPath(relativePath: string): string {
   return path.join(__dirname, '../../.tmp/', relativePath);
@@ -33,7 +40,7 @@ export async function startFileServer(dirPath: string, port: number, mapping?: R
     app.enable('strict routing');
 
     Object.keys(mapping).forEach(key => {
-      console.log('GET', key, '->', mapping[key]);
+      log('GET', key, '->', mapping[key]);
       app.use(key, async (req, res) => {
         res.contentType(path.basename(mapping[key]));
         const content = await fs.promises.readFile(mapping[key], { encoding: 'utf-8' });
@@ -41,7 +48,7 @@ export async function startFileServer(dirPath: string, port: number, mapping?: R
       });
     });
   } else {
-    console.log('GET *', '->', `${dirPath}*`);
+    log('GET *', '->', `${dirPath}*`);
     app.use('/', express.static(dirPath, { extensions: ['html'] }));
   }
 
@@ -56,7 +63,9 @@ export const exec = promisify(child_process.exec);
 
 export async function blinkDiff(aImgPath: string, bImgPath: string) {
   const tmpPath = getRandomTmpPath('squint-test-diff.png');
-  console.log('Comparing', aImgPath, 'to', bImgPath);
+  await mkdirp(path.dirname(tmpPath));
+
+  log('Comparing', aImgPath, 'to', bImgPath);
   const diff = new BlinkDiff({
     imageAPath: aImgPath,
     imageBPath: bImgPath,
@@ -69,13 +78,13 @@ export async function blinkDiff(aImgPath: string, bImgPath: string) {
   const promisifiedDiff = BPromise.promisifyAll(diff);
   const result = await promisifiedDiff.runAsync();
 
+  log('Found', result.differences, 'differences');
+
   if (!DEBUG) {
     await fs.promises.unlink(tmpPath);
   } else {
-    console.log(`Saved diff output to ${tmpPath}`);
+    log(`Saved diff output to ${tmpPath}`);
   }
-
-  console.log('Found', result.differences, 'differences');
 
   return { diff, result };
 }

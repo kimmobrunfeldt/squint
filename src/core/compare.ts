@@ -6,7 +6,7 @@ import { URL } from 'url'
 import BPromise from 'bluebird';
 import BlinkDiff from 'blink-diff';
 import fs from 'fs';
-import { promiseEachSeries } from '../utils';
+import { promiseEachSeries, mkdirp } from '../utils';
 import { Pool } from 'generic-pool';
 import { promisify } from 'util';
 import glob from 'glob';
@@ -16,15 +16,6 @@ import { takeScreenshot } from './screenshot';
 
 const slugifyWithCounter = slugify.counter();
 const globAsync = promisify(glob);
-
-
-async function mkdirp(dir: string) {
-  try {
-    await fs.promises.mkdir(dir, { recursive: true });
-  } catch (e) {
-    // ignore
-  }
-}
 
 export async function clean(config: Config) {
   const pattern = path.join(config.outDir, '*.png');

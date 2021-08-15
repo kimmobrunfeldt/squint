@@ -95,12 +95,6 @@ That's ok, the main intention is not to be an automated pass / fail tool.
 ## Tips & tricks
 
 Got a trick? Submit a PR!
-
-### Failing tests with `DEBUG_TESTS=true`
-
-It seems that Puppeteer element screenshot works differently when running with `headless: false`.
-
-
 ### Connect to a Chrome session
 
 *This way you can reuse existing sessions and logins. No need to do difficult setup with cookies.*
@@ -138,6 +132,15 @@ squint screenshot https://google.com --puppeteer-launch-options '{ headless: fal
 
 
 ## Maintenance tasks
+
+### Debugging tests
+
+```
+DEBUG_TESTS=true npm test
+```
+
+There's also `DEBUG_PUPPETEER=true` that launches Chrome with the UI visible. It seems that Puppeteer element screenshot works differently when running with `headless: false`. Use with caution!
+
 
 ### Generating baseline screenshots for tests
 
