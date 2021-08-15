@@ -51,7 +51,7 @@ describe('squint', () => {
     })
 
     it('screenshot with -o location', async () => {
-      const tmpPath = getTmpPath('nonexisting/path/should/be/created/shot.png')
+      const tmpPath = getTmpPath('nonexistent/shot.png')
       // Test that --out-file works and creates the path if necessary
       await exec(`${squint} screenshot ${baseUrl1}/new -o ${tmpPath}`)
       const { diff, result } = await blinkDiff(
@@ -62,9 +62,7 @@ describe('squint', () => {
     })
 
     it('screenshot --out-file', async () => {
-      const tmpFile = getRandomTmpPath(
-        'nonexisting/path/should/be/created/shot.png'
-      )
+      const tmpFile = getRandomTmpPath('nonexistent/shot.png')
       await exec(`${squint} screenshot ${baseUrl1}/old --out-file ${tmpFile}`)
       const { diff, result } = await blinkDiff(
         getResourcePath('case1/img/screenshot/old.png'),
@@ -74,9 +72,7 @@ describe('squint', () => {
     })
 
     it('screenshot --selector', async () => {
-      const tmpFile = getRandomTmpPath(
-        'nonexisting/path/should/be/created/shot.png'
-      )
+      const tmpFile = getRandomTmpPath('nonexistent/shot.png')
       await exec(
         `${squint} screenshot ${baseUrl1}/old --selector 'h1' --out-file ${tmpFile}`
       )
@@ -88,9 +84,7 @@ describe('squint', () => {
     })
 
     it('screenshot --selector-js', async () => {
-      const tmpFile = getRandomTmpPath(
-        'nonexisting/path/should/be/created/shot.png'
-      )
+      const tmpFile = getRandomTmpPath('nonexistent/shot.png')
       await exec(
         `${squint} screenshot ${baseUrl1}/old --selector-js '(page) => page.$("h1")' --out-file ${tmpFile}`
       )
