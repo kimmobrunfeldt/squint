@@ -72,10 +72,10 @@ describe('squint', () => {
       expect(diff.hasPassed(result.code)).toStrictEqual(true)
     })
 
-    it('screenshot --selector', async () => {
+    it.only('screenshot --selector', async () => {
       const tmpFile = getRandomTmpPath('nonexistent/shot.png')
       await exec(
-        `${squint} screenshot ${baseUrl1}/old --selector 'h1' --out-file ${tmpFile}`
+        `${squint} screenshot ${baseUrl1}/old --selector "h1" --out-file ${tmpFile}`
       )
       const { diff, result } = await blinkDiff(
         getResourcePath('case1/img/screenshot/old-h1.png'),
@@ -84,11 +84,11 @@ describe('squint', () => {
       expect(diff.hasPassed(result.code)).toStrictEqual(true)
     })
 
-    it('screenshot --selector-js', async () => {
+    it.only('screenshot --selector-js', async () => {
       const tmpFile = getRandomTmpPath('nonexistent/shot.png')
       await exec(
         IS_WINDOWS
-          ? `${squint} screenshot ${baseUrl1}/old --selector-js "(page) => page.\`$('h1')" --out-file ${tmpFile}`
+          ? `${squint} screenshot ${baseUrl1}/old --selector-js "(page) => page.$('h1')" --out-file ${tmpFile}`
           : `${squint} screenshot ${baseUrl1}/old --selector-js '(page) => page.$("h1")' --out-file ${tmpFile}`
       )
       const { diff, result } = await blinkDiff(
