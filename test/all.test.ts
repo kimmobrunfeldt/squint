@@ -84,7 +84,7 @@ describe('squint', () => {
       expect(diff.hasPassed(result.code)).toStrictEqual(true)
     })
 
-    it.only('screenshot --selector-js', async () => {
+    it('screenshot --selector-js', async () => {
       const tmpFile = getRandomTmpPath('nonexistent/shot.png')
       await exec(
         IS_WINDOWS

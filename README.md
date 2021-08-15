@@ -27,6 +27,7 @@ custom JS code before Puppeteer takes a screenshot.
     The goal is to provide most convenience flags via CLI, but allow flexible JS options for advanced tricks.
 
 * Supports [connecting to your local Chrome](#connect-to-a-chrome-session), with its existing logins and sessions. No need to deal with cookies in code.
+* Tested on all platforms: macOS, Windows, and Linux
 
 ![Example image of diff](docs/diff.png)
 
