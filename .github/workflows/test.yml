@@ -34,7 +34,7 @@ jobs:
       - name: npm test
         run: npm test
         env:
-          DEBUG_TESTS=true
+          DEBUG_TESTS: true
       - uses: actions/upload-artifact@v2
         if: failure()
         with:
