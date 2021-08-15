@@ -13,7 +13,7 @@
   "scripts": {
     "build": "tsc",
     "clean": "rm -rf .tmp .squint",
-    "eslint": "eslint '**/*.ts'",
+    "eslint": "eslint .",
     "eslint:fix": "npm run eslint -- --fix",
     "test": "npm run clean && jest --silent=false",
     "updateReadmeHelp": "zx tools/updateReadmeHelp.mjs",
