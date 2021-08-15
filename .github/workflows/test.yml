@@ -32,5 +32,9 @@ jobs:
       - run: npm ci
       - run: npm run eslint
       - run: npm test
+      - uses: actions/upload-artifact@v2
+        with:
+          name: .tmp/ images
+          path: .tmp/
       - run: npm run updateReadmeHelp && git diff --exit-code
       - run: npm run build
