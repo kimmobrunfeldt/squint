@@ -35,7 +35,7 @@ jobs:
       - uses: actions/upload-artifact@v2
         if: failure()
         with:
-          name: .tmp/ images
+          name: tmp-images-${{ matrix.os }}-node${{ matrix.node }}
           path: .tmp/
       - run: npm run updateReadmeHelp && git diff --exit-code
       - run: npm run build
