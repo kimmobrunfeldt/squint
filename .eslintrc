@@ -6,7 +6,7 @@
     "plugin:@typescript-eslint/recommended",
     "plugin:prettier/recommended"
   ],
-  "ignorePatterns": ["node_modules/**/*"],
+  "ignorePatterns": ["node_modules/**/*", "dist/**/*"],
   "parser": "@typescript-eslint/parser",
   "plugins": [
     "@typescript-eslint"
