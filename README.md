@@ -2,11 +2,22 @@
 
 # Squint
 
-> Create visual diffs between two different versions of a web app.
+> Squint makes visual reviews of web app releases easy.
 
-Squint is intended to speed up a manual visual review of a new web app release.
-The diffs will likely have false positives due to async loading or animations.
-That's ok, the main intention is not to be an automated pass / fail tool.
+Squint uses Puppeteer to:
+
+* automatically crawl all url paths from a web app
+* take screenshots of each page from A and B versions of the app
+* output all diff images that contain changes into a directory
+
+That's the main intended use case for Squint. The diffs will likely
+have false positives due to async loading or animations. That's by design,
+the main intention is not to be a full solution, but rather a light-weight
+solution.
+
+For most production setups, I'd recommend using [Percy](https://percy.io/) instead.
+That said, CLI flags have been designed customization in mind: you can for example run
+custom JS code before Puppeteer takes a screenshot
 
 **Goodies:**
 

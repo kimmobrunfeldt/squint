@@ -1,7 +1,8 @@
 {
   "name": "squint-cli",
   "version": "1.0.2",
-  "description": "",
+  "description": "Squint makes visual reviews of web app releases easy",
+  "keywords": ["puppeteer", "blink diff", "visual", "diff", "review", "web", "web app", "squint"],
   "main": "dist/src/index.js",
   "bin": {
     "squint": "./dist/src/index.js"
