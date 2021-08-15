@@ -21,12 +21,12 @@ custom JS code before Puppeteer takes a screenshot.
 
 **Goodies:**
 
-* Puppeteer under the hood
-* Smart defaults but highly configurable.
+* [Puppeteer](https://github.com/puppeteer/puppeteer) under the hood
+* Smart defaults but [highly configurable](#usage).
 
     The goal is to provide most convenience flags via CLI, but allow flexible JS options for advanced tricks.
 
-* Supports connecting to your local Chrome, with its existing logins and sessions. No need to deal with cookies in code.
+* Supports [connecting to your local Chrome](#connect-to-a-chrome-session), with its existing logins and sessions. No need to deal with cookies in code.
 
 ![Example image of diff](docs/diff.png)
 
