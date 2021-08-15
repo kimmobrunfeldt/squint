@@ -3,7 +3,7 @@ import glob from 'glob';
 import sharp from 'sharp';
 import http from 'http';
 import { promisify } from 'util';
-import { log, DEBUG, PORT_1, PORT_2, getResourcePath, startFileServer, exec, blinkDiff, getTmpPath, getRandomTmpPath } from "./utils"
+import { log, PORT_1, PORT_2, getResourcePath, startFileServer, exec, blinkDiff, getTmpPath, getRandomTmpPath } from "./utils"
 import { promiseEachSeries } from '../src/utils';
 import _ from 'lodash';
 
@@ -30,13 +30,13 @@ describe('squint', () => {
       server.close();
     });
 
-    it.only('screenshot old.html with default save location for screenshot image', async () => {
+    it.only('screenshot with default save location', async () => {
       await exec(`${squint} screenshot ${baseUrl1}/old`);
       const { diff, result } = await blinkDiff(getResourcePath('case1/img/screenshot/old.png'), '.squint/screenshot.png');
       expect(diff.hasPassed(result.code)).toStrictEqual(true);
     })
 
-    it('screenshot new.html with -o save location', async () => {
+    it('screenshot with -o location', async () => {
       const tmpPath = getTmpPath('nonexisting/path/should/be/created/shot.png');
       // Test that --out-file works and creates the path if necessary
       await exec(`${squint} screenshot ${baseUrl1}/new -o ${tmpPath}`);
@@ -65,14 +65,14 @@ describe('squint', () => {
       expect(diff.hasPassed(result.code)).toStrictEqual(true);
     })
 
-    it('screenshot with exact -w and -h', async () => {
+    it('screenshot -w and -h', async () => {
       await exec(`${squint} screenshot ${baseUrl1}/old -w 100 -h 301`);
       const metadata = await sharp('.squint/screenshot.png').metadata();
       expect(metadata.width).toStrictEqual(100);
       expect(metadata.height).toStrictEqual(301);
     })
 
-    it('compare with default save location for diff image', async () => {
+    it('compare default save location', async () => {
       await exec(`${squint} compare ${baseUrl1}/old ${baseUrl1}/new --single-page`);
       const { diff, result } = await blinkDiff(getResourcePath('case1/img/compare/diff.png'), '.squint/diff.png');
       expect(diff.hasPassed(result.code)).toStrictEqual(true);
@@ -117,7 +117,7 @@ describe('squint', () => {
       ]));
     })
 
-    it('crawl with --include-hash', async () => {
+    it('crawl --include-hash', async () => {
       const { stdout } = await exec(`${squint} crawl ${baseUrl2} --include-hash`);
       const outPaths = _.sortBy(stdout.trim().split('\n'));
 
@@ -228,8 +228,14 @@ describe('squint', () => {
         .toThrow();
     });
 
-    it('--js syntax', async () => {
-      await expect(exec(`${squint} screenshot ${baseUrl1} --js '(page) => (oops'`))
+    it('--puppeteer-launch-options syntax', async () => {
+      await expect(exec(`${squint} screenshot ${baseUrl1} --puppeteer-launch-options '{"baseURL: "http://localhost:9000" }'`))
+        .rejects
+        .toThrow();
+    });
+
+    it('--non-existing', async () => {
+      await expect(exec(`${squint} screenshot ${baseUrl1} --non-existing'`))
         .rejects
         .toThrow();
     });

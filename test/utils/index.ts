@@ -9,8 +9,8 @@ import child_process from 'child_process';
 import BPromise from 'bluebird';
 import { mkdirp } from '../../src/utils';
 
-export const PORT_1 = 10000;
-export const PORT_2 = 10001;
+export const PORT_1 = 23010;
+export const PORT_2 = 23011;
 export const DEBUG = process.env.DEBUG_TESTS === 'true';
 
 export function log(...args: any) {
