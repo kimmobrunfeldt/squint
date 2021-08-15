@@ -4,11 +4,11 @@
 
 > Makes visual reviews of web app releases easy.
 
-Squint uses Puppeteer to:
+`squint compare` uses Puppeteer to:
 
 * automatically crawl all url paths from a web app
 * take screenshots of each page from A and B versions of the app
-* output all diff images that contain changes into a directory
+* output all diff images that had changes into a directory
 
 That's the main intended use case. The diffs will likely
 have false positives due to async loading or animations. That's ok,
