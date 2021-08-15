@@ -72,7 +72,9 @@ custom JS code before Puppeteer takes a screenshot.
       --trailing-slash-mode        Options: preserve, remove, add. Default: preserve
       --puppeteer-launch-mode      Options: launch, connect. Default: launch
       --puppeteer-launch-options   Puppeteer .launch or .connect options in JS. Default: {"headless":true}
-      --after-goto                         Custom JS code that will be run after Puppeteer page.goto has been called.
+      --after-goto                 Custom JS code that will be run after Puppeteer page.goto has been called.
+                                   (page: Puppeteer.Page) => Promise<void>
+      --after-page                 Custom JS code that will be run after Puppeteer page has been created.
                                    (page: Puppeteer.Page) => Promise<void>
 
   COMPARE & SCREENSHOT
