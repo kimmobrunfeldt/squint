@@ -13,8 +13,8 @@
 * output all diff images for pages that had visual differences
 
 That's the main intended use case. The diffs will likely
-have false positives due to async loading or animations. That's ok,
-the main intention is not to be a full solution, but rather a light-weight
+have false positives due to async loading, animations, and different data.
+That's ok, the main intention is not to be a full solution, but rather a light-weight
 alternative.
 
 For most production setups, I'd recommend using [Percy](https://percy.io/) instead.
