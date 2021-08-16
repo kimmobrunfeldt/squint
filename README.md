@@ -4,7 +4,7 @@
 
 > Makes visual reviews of web app releases easy.
 
-![Example terminal usage](docs/terminal.gif)
+![Example terminal usage](https://raw.githubusercontent.com/kimmobrunfeldt/squint/main/docs/terminal.gif)
 
 `squint compare https://prod.myapp.com https://beta.myapp.com` uses Puppeteer to:
 
@@ -31,7 +31,7 @@ custom JS code before Puppeteer takes a screenshot.
 * Supports [connecting to your local Chrome](#connect-to-a-chrome-session), with its existing logins and sessions. No need to deal with cookies in code.
 * Tested on all platforms: macOS, Windows, and Linux
 
-![Example image of diff](docs/diff.png)
+![Example image of diff](https://raw.githubusercontent.com/kimmobrunfeldt/squint/main/docs/diff.png)
 
 ## Known limitations
 
