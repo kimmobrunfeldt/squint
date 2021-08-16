@@ -86,6 +86,7 @@ kill $PID
       --help                       Shows this help message
       --puppeteer-launch-mode      Options: launch, connect. Default: launch
       --puppeteer-launch-options   Puppeteer .launch or .connect options in JS. Default: {"headless":true}
+      --puppeteer-page-pool-max    Maximum pages to use at the same time with Puppeteer. Default: 10
       --include-hash               When enabled, URL hashes are not ignored when crawling. Default: false
       --include-search-query       When enabled, URL search queries are not ignored when crawling. Default: false
       --should-visit               Custom JS function that can limit which links the crawler follows.

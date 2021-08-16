@@ -21,6 +21,7 @@ export type Config = {
   shouldVisit?: string
   trailingSlashMode: 'preserve' | 'remove' | 'add'
   puppeteerLaunchMode: puppeteerLaunchMode
+  puppeteerPagePoolMax: number
   maxDepth: number
   outDir: string
   outFile: string
@@ -55,6 +56,7 @@ export const defaultConfig = {
       headless: true,
     },
   },
+  puppeteerPagePoolMax: 10,
   outDir: '.squint',
   screenshotOptions: {},
 }
@@ -98,6 +100,8 @@ export function parseConfig() {
         args['--puppeteer-launch-options'] ??
         defaultConfig.puppeteerLaunchMode.options,
     } as Config['puppeteerLaunchMode'],
+    puppeteerPagePoolMax:
+      args['--puppeteer-page-pool-max'] ?? defaultConfig.puppeteerPagePoolMax,
     afterGoto: args['--after-goto'],
     afterPage: args['--after-page'],
     selector: args['--selector'],

@@ -19,7 +19,7 @@ export function createPagePool(browser: Browser, config: Config) {
   }
 
   return genericPool.createPool(factory, {
-    max: 10,
+    max: config.puppeteerPagePoolMax,
     min: 1,
   })
 }

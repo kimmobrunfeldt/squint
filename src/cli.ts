@@ -40,6 +40,9 @@ export function formatHelp(defaultConfig: typeof _defaultConfig) {
       --puppeteer-launch-options   Puppeteer .launch or .connect options in JS. Default: ${JSON.stringify(
         defaultConfig.puppeteerLaunchMode.options
       )}
+      --puppeteer-page-pool-max    Maximum pages to use at the same time with Puppeteer. Default: ${
+        defaultConfig.puppeteerPagePoolMax
+      }
       --include-hash               When enabled, URL hashes are not ignored when crawling. Default: ${
         defaultConfig.includeHash
       }
@@ -132,6 +135,7 @@ export function parseCliArgs() {
     '--max-depth': Number,
     '--puppeteer-launch-mode': String,
     '--puppeteer-launch-options': String,
+    '--puppeteer-page-pool-max': Number,
     '--after-goto': String,
     '--after-page': String,
     '--single-page': Boolean,
