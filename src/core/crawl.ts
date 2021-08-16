@@ -5,7 +5,6 @@ import _ from 'lodash'
 import PQueue from 'p-queue'
 import { Config } from '../config'
 import chalk from 'chalk'
-import { union } from '../utils'
 
 function normalizeUrl(
   url: string,
