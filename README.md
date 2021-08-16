@@ -213,6 +213,18 @@ squint crawl https://mysite.com --should-visit '(urlToVisit, hrefDetails, visite
 `urlToVisit` is a [WHATWG URL](https://nodejs.org/api/url.html#url_new_url_input_base) object.
 The flag also works for `compare` command.
 
+### Keep crawler in specific parts of a site
+
+Start crawling from a nested path, and use `--should-visit` to limit crawling.
+
+```bash
+squint crawl https://github.com/kimmobrunfeldt/squint/ --should-visit '(urlToVisit) => {
+  const isTree = urlToVisit.pathname.startsWith("/kimmobrunfeldt/squint/tree/main");
+  const isBlob = urlToVisit.pathname.startsWith("/kimmobrunfeldt/squint/blob/main");
+  return isTree || isBlob;
+}'
+```
+
 ### Debugging JS arguments
 
 You can use regular JS console.log for the incoming parameters, for example for `--should-visit`:
