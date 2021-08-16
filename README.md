@@ -135,17 +135,25 @@ kill $PID
 ## Tips & tricks
 
 Got a trick? Submit a PR!
-### Connect to a Chrome session
 
-*This way you can reuse existing sessions and logins. No need to do difficult setup with cookies.*
+### Increase Puppeteer timeouts
 
-1. Close your Chrome process (unless you already have remote debugging enabled).
-2. Launch Chrome with a remote debugger enabled
+```bash
+squint screenshot https://github.com/kimmobrunfeldt/squint --after-page "async (page) => page.setDefaultTimeout(60000)"
+```
 
-    In macOS: `/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --remote-debugging-port=9222`
+You can also use `page.setDefaultNavigationTimeout(60000)` to only change navigation timeouts.
 
-3. `squint screenshot --puppeteer-launch-mode connect --puppeteer-launch-options '{ browserURL: "http://localhost:9222" }' https://example.com`
+### Interact with page before screenshot
 
+Click "I agree" button to hide ToS popup before taking a screenshot. *Beware of character escaping, it's fragile.*
+
+```bash
+squint screenshot https://google.com --puppeteer-launch-options '{ headless: false }' --after-goto 'async (page) => {
+  const [button] = await page.$x(`//button[contains(., "I agree")]`);
+  await button.click();
+}'
+```
 
 ### Disable full page screenshot
 
@@ -166,6 +174,17 @@ DEBUG="puppeteer:* squint screenshot https://example.com
 ```bash
 squint screenshot --puppeteer-launch-options '{ headless: false }' https://example.com
 ```
+
+### Connect to a Chrome session
+
+*This way you can reuse existing sessions and logins. No need to do difficult setup with cookies.*
+
+1. Close your Chrome process (unless you already have remote debugging enabled).
+2. Launch Chrome with a remote debugger enabled
+
+    In macOS: `/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --remote-debugging-port=9222`
+
+3. `squint screenshot --puppeteer-launch-mode connect --puppeteer-launch-options '{ browserURL: "http://localhost:9222" }' https://example.com`
 
 ### Customize crawler
 
