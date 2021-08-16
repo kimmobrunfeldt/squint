@@ -1,6 +1,6 @@
 {
   "name": "squint-cli",
-  "version": "1.1.0",
+  "version": "2.0.0",
   "description": "Squint makes visual reviews of web app releases easy",
   "keywords": [
     "puppeteer",
