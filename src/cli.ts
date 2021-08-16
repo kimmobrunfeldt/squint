@@ -40,6 +40,14 @@ export function formatHelp(defaultConfig: typeof _defaultConfig) {
       --include-search-query       When enabled, URL search queries are not ignored when crawling. Default: ${
         defaultConfig.includeSearchQuery
       }
+      --should-visit               Custom JS that can limit which links crawler follows.
+                                   This is an AND filter on top of all other filters.
+                                   (
+                                     urlToVisit: url.URL,
+                                     hrefDetails: { currentUrl: string, href: string },
+                                     visited: Set<string>,
+                                     config: Config
+                                   ) => boolean
       --trailing-slash-mode        Options: preserve, remove, add. Default: ${
         defaultConfig.trailingSlashMode
       }
@@ -118,6 +126,7 @@ export function parseCliArgs() {
     '-h': '--height',
     '--include-hash': Boolean,
     '--include-search-query': Boolean,
+    '--should-visit': String,
     '--trailing-slash-mode': String,
     '--max-depth': Number,
     '--puppeteer-launch-mode': String,

@@ -2,23 +2,54 @@ import { Pool } from 'generic-pool'
 import path from 'path'
 import fs from 'fs'
 import { Page } from 'puppeteer'
-import { promiseEachSeries } from './utils'
+import { evalJs, promiseEachSeries } from './utils'
 import { clean, compareUrls } from './core/compare'
 import { Config } from './config'
-import { crawlPaths, createShouldVisit } from './core/crawl'
+import { crawlPaths } from './core/crawl'
 import { screenshot } from './core/screenshot'
 import chalk from 'chalk'
 
+function siteInternalCheck(href: string, currentUrl: string, baseUrl: string) {
+  const hrefUrlParts = new URL(href, currentUrl)
+  const urlNewParts = new URL(baseUrl)
+  const isInternal =
+    urlNewParts.host.toLowerCase() === hrefUrlParts.host.toLowerCase()
+  return isInternal
+}
+
+function createShouldVisit(config: Config, baseUrl: string) {
+  return (
+    resolvedHref: string,
+    hrefDetails: { currentUrl: string; href: string },
+    visited: Set<string>
+  ) => {
+    const customShouldVisit = config.shouldVisit
+      ? (evalJs(
+          config.shouldVisit,
+          new URL(resolvedHref),
+          hrefDetails,
+          visited,
+          config
+        ) as boolean)
+      : true
+    const isInternal = siteInternalCheck(
+      hrefDetails.href,
+      hrefDetails.currentUrl,
+      baseUrl
+    )
+
+    return isInternal && customShouldVisit
+  }
+}
+
 export async function crawlCommand(pagePool: Pool<Page>, config: Config) {
   const paths = await crawlPaths({
+    ...config,
     pagePool,
     // Use new url as the basis for traversal.
     // This will correctly show new pages that are not yet in the old version
     urlsToVisit: new Set<string>([config.crawlUrl]),
-    shouldVisit: createShouldVisit(config.crawlFilters, {
-      baseUrl: config.crawlUrl,
-    }),
-    ...config,
+    shouldVisit: createShouldVisit(config, config.crawlUrl),
   })
 
   ;[...paths].forEach((urlPath) => console.log(urlPath))
@@ -50,14 +81,12 @@ async function compareMultiMode(pagePool: Pool<Page>, config: Config) {
       .filter((line) => Boolean(line))
   } else {
     paths = await crawlPaths({
+      ...config,
       pagePool,
       // Use new url as the basis for traversal.
       // This will correctly show new pages that are not yet in the old version
       urlsToVisit: new Set<string>([config.newUrl]),
-      shouldVisit: createShouldVisit(config.crawlFilters, {
-        baseUrl: config.newUrl,
-      }),
-      ...config,
+      shouldVisit: createShouldVisit(config, config.newUrl),
     })
   }
 

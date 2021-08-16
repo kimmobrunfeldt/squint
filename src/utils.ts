@@ -26,7 +26,8 @@ export async function promiseEachSeries<T>(
   return iterable
 }
 
-export async function evalJs(code: string, ...args: any[]): Promise<any> {
+// lodash is in scope for evaluated code
+export function evalJs(code: string, ...args: any[]): any {
   let result: any
   const codeToEval = `(() => { return ${code}; })()`
   try {

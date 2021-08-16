@@ -13,14 +13,12 @@ export type puppeteerLaunchMode =
       options?: Parameters<typeof puppeteer.launch>[0]
     }
 
-export type CrawlFilter = 'siteInternal'
-
 export type Config = {
   width: number
   height: number
   includeHash: boolean
   includeSearchQuery: boolean
-  crawlFilters: CrawlFilter[]
+  shouldVisit?: string
   trailingSlashMode: 'preserve' | 'remove' | 'add'
   puppeteerLaunchMode: puppeteerLaunchMode
   maxDepth: number
@@ -50,10 +48,6 @@ export const defaultConfig = {
   includeSearchQuery: false,
   trailingSlashMode: 'preserve',
   saveAll: false,
-  // This should in most cases be just 'siteInternal'
-  // Removing filters would make the crawler start following
-  // external links, and comparing those paths visually doesn't make sense
-  crawlFilters: ['siteInternal' as const],
   maxDepth: Infinity,
   puppeteerLaunchMode: {
     type: 'launch' as const,
@@ -92,7 +86,7 @@ export function parseConfig() {
       args['--include-search-query'] ?? defaultConfig.includeSearchQuery,
     trailingSlashMode:
       args['--trailing-slash-mode'] ?? defaultConfig.trailingSlashMode,
-    crawlFilters: defaultConfig.crawlFilters,
+    shouldVisit: args['--should-visit'],
     maxDepth: args['--max-depth'] ?? defaultConfig.maxDepth,
     outDir,
     outFile: args['--out-file'] ?? defaultOutFile,

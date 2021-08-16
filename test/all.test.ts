@@ -204,6 +204,18 @@ describe('squint', () => {
 
       expect(stdout).toStrictEqual(`${paths.join('\n')}\n`)
     })
+
+    it('crawl --should-visit', async () => {
+      // Achieve same as --max-depth 3, using --should-visit
+      const { stdout } = await exec(
+        `${squint} crawl ${baseUrl1}/0 --should-visit "(urlToVisit, _, visited) => visited.size <= 3"`
+      )
+
+      // These should be in order
+      const paths = ['/0', '/1', '/2', '/3']
+
+      expect(stdout).toStrictEqual(`${paths.join('\n')}\n`)
+    })
   })
 
   describe('case4', () => {

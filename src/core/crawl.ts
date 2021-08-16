@@ -3,7 +3,7 @@ import { URL } from 'url'
 import { Pool } from 'generic-pool'
 import _ from 'lodash'
 import PQueue from 'p-queue'
-import { Config, CrawlFilter } from '../config'
+import { Config } from '../config'
 import chalk from 'chalk'
 
 function normalizeUrl(
@@ -28,42 +28,17 @@ function normalizeUrl(
   return urlParts.toString()
 }
 
-export type CrawlFilterOptions = {
-  baseUrl: string
-}
-type CrawlFilterFunctions = {
-  [name in CrawlFilter]: (
-    opts: CrawlFilterOptions,
-    currentUrl: string,
-    href: string
-  ) => boolean
-}
-const crawlFilterFunctions: CrawlFilterFunctions = {
-  siteInternal: (opts, currentUrl, href) => {
-    const hrefUrlParts = new URL(href, currentUrl)
-    const urlNewParts = new URL(opts.baseUrl)
-    const isInternal =
-      urlNewParts.host.toLowerCase() === hrefUrlParts.host.toLowerCase()
-    return isInternal
-  },
-}
-
-export function createShouldVisit(
-  crawlFilters: CrawlFilter[],
-  opts: CrawlFilterOptions
-): NonNullable<CrawlInputs['shouldVisit']> {
-  return function shouldVisit(currentUrl, href) {
-    const filterResults = crawlFilters.map((name) =>
-      crawlFilterFunctions[name](opts, currentUrl, href)
-    )
-    return _.every(filterResults)
-  }
-}
-
 type CrawlInputs = {
   pagePool: Pool<Page>
   urlsToVisit: Set<string>
-  shouldVisit?: (currentUrl: string, href: string) => boolean
+  shouldVisit?: (
+    resolvedHref: string,
+    hrefDetails: {
+      currentUrl: string
+      href: string
+    },
+    visited: Set<string>
+  ) => boolean
 } & Pick<
   Config,
   'includeHash' | 'includeSearchQuery' | 'trailingSlashMode' | 'maxDepth'
@@ -92,8 +67,8 @@ export async function crawlPaths(
         )
       })
 
-      console.error(chalk.dim`Visited ${url}`)
-      memory.visited.add(url)
+      console.error(chalk.dim`Visited ${normalizeUrl(url, inputs)}`)
+      memory.visited.add(normalizeUrl(url, inputs))
 
       if (memory.depth >= maxDepth) {
         // Stop following links if max depth has been reached already
@@ -107,7 +82,12 @@ export async function crawlPaths(
         const isCorrectProtocol = ['http:', 'https:'].includes(
           resolvedHrefParts.protocol
         )
-        if (shouldVisit(url, href) && isCorrectProtocol && !isVisitedAlready) {
+        const shouldVisitResult = shouldVisit(
+          resolvedHref,
+          { currentUrl: url, href },
+          memory.visited
+        )
+        if (shouldVisitResult && isCorrectProtocol && !isVisitedAlready) {
           newUrlsToVisit.add(resolvedHref)
         }
       })
