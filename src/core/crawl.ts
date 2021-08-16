@@ -8,11 +8,15 @@ import chalk from 'chalk'
 
 function normalizeUrl(
   url: string,
-  opts: Pick<Config, 'includeHash' | 'trailingSlashMode'>
+  opts: Pick<Config, 'includeHash' | 'includeSearchQuery' | 'trailingSlashMode'>
 ): string {
   const urlParts = new URL(url)
   if (!opts.includeHash) {
     urlParts.hash = ''
+  }
+
+  if (!opts.includeSearchQuery) {
+    urlParts.search = ''
   }
 
   if (opts.trailingSlashMode === 'add') {
@@ -60,7 +64,10 @@ type CrawlInputs = {
   pagePool: Pool<Page>
   urlsToVisit: Set<string>
   shouldVisit?: (currentUrl: string, href: string) => boolean
-} & Pick<Config, 'includeHash' | 'trailingSlashMode' | 'maxDepth'>
+} & Pick<
+  Config,
+  'includeHash' | 'includeSearchQuery' | 'trailingSlashMode' | 'maxDepth'
+>
 
 type CrawlInternalMemory = {
   visited: Set<string>

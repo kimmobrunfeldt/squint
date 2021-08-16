@@ -84,7 +84,8 @@ kill $PID
   COMMON OPTIONS
 
       --help                       Shows this help message
-      --include-hash               When enabled, URL hashes are not removed. Default: false
+      --include-hash               When enabled, URL hashes are not ignored when crawling. Default: false
+      --include-search-query       When enabled, URL search queries are not ignored when crawling. Default: false
       --trailing-slash-mode        Options: preserve, remove, add. Default: preserve
       --puppeteer-launch-mode      Options: launch, connect. Default: launch
       --puppeteer-launch-options   Puppeteer .launch or .connect options in JS. Default: {"headless":true}

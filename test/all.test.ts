@@ -72,7 +72,7 @@ describe('squint', () => {
       expect(diff.hasPassed(result.code)).toStrictEqual(true)
     })
 
-    it.only('screenshot --selector', async () => {
+    it('screenshot --selector', async () => {
       const tmpFile = getRandomTmpPath('nonexistent/shot.png')
       await exec(
         `${squint} screenshot ${baseUrl1}/old --selector "h1" --out-file ${tmpFile}`
@@ -162,6 +162,23 @@ describe('squint', () => {
 
       expect(outPaths).toStrictEqual(
         _.sortBy(['/', '/about-us', '/company', '/blog', '/company#testhash'])
+      )
+    })
+
+    it('crawl --include-search-query', async () => {
+      const { stdout } = await exec(
+        `${squint} crawl ${baseUrl2} --include-search-query`
+      )
+      const outPaths = _.sortBy(stdout.trim().split('\n'))
+
+      expect(outPaths).toStrictEqual(
+        _.sortBy([
+          '/',
+          '/about-us',
+          '/company',
+          '/blog',
+          '/?query-should-be-ignored=1&test=true',
+        ])
       )
     })
   })

@@ -34,8 +34,11 @@ export function formatHelp(defaultConfig: typeof _defaultConfig) {
   {bold COMMON OPTIONS}
 
       --help                       Shows this help message
-      --include-hash               When enabled, URL hashes are not removed. Default: ${
+      --include-hash               When enabled, URL hashes are not ignored when crawling. Default: ${
         defaultConfig.includeHash
+      }
+      --include-search-query       When enabled, URL search queries are not ignored when crawling. Default: ${
+        defaultConfig.includeSearchQuery
       }
       --trailing-slash-mode        Options: preserve, remove, add. Default: ${
         defaultConfig.trailingSlashMode
@@ -114,6 +117,7 @@ export function parseCliArgs() {
     '--height': Number,
     '-h': '--height',
     '--include-hash': Boolean,
+    '--include-search-query': Boolean,
     '--trailing-slash-mode': String,
     '--max-depth': Number,
     '--puppeteer-launch-mode': String,

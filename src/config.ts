@@ -19,6 +19,7 @@ export type Config = {
   width: number
   height: number
   includeHash: boolean
+  includeSearchQuery: boolean
   crawlFilters: CrawlFilter[]
   trailingSlashMode: 'preserve' | 'remove' | 'add'
   puppeteerLaunchMode: puppeteerLaunchMode
@@ -46,6 +47,7 @@ export const defaultConfig = {
   width: 1280,
   height: 800,
   includeHash: false,
+  includeSearchQuery: false,
   trailingSlashMode: 'preserve',
   saveAll: false,
   // This should in most cases be just 'siteInternal'
@@ -86,6 +88,8 @@ export function parseConfig() {
     width: args['--width'] ?? defaultConfig.width,
     height: args['--height'] ?? defaultConfig.height,
     includeHash: args['--include-hash'] ?? defaultConfig.includeHash,
+    includeSearchQuery:
+      args['--include-search-query'] ?? defaultConfig.includeSearchQuery,
     trailingSlashMode:
       args['--trailing-slash-mode'] ?? defaultConfig.trailingSlashMode,
     crawlFilters: defaultConfig.crawlFilters,
