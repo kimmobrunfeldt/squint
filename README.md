@@ -8,7 +8,7 @@
 
 `squint compare https://prod.myapp.com https://beta.myapp.com` uses Puppeteer to:
 
-* automatically crawl all url paths from the beta version
+* automatically crawl all url paths from the beta version *(see [this issue](https://github.com/kimmobrunfeldt/squint/issues/2))*
 * take screenshots of each page from prod and beta versions of the app
 * output all diff images for pages that had visual differences
 
@@ -57,7 +57,7 @@ kill $PID
 ```bash
   EXAMPLES
 
-      Compare beta to current production. The whole site is automatically crawled.
+      Compare current production to beta. The whole site is automatically crawled.
       $ squint compare https://example.com https://beta.example.com
 
       Crawl all paths from beta site and pipe output to a file. The crawler only follows site-internal links.
@@ -69,7 +69,7 @@ kill $PID
       Get screenshot of a single element in a page.
       $ squint screenshot --selector 'div' https://beta.example.com
 
-      Compare beta to current production, but use an existing file of paths.
+      Compare current production to beta, but use an existing file of paths.
       $ squint compare --paths-file paths.txt https://example.com https://beta.example.com
 
       Compare a single page.
@@ -170,6 +170,8 @@ DEBUG="puppeteer:* squint screenshot https://example.com
 ```
 
 ### Disable headless mode
+
+**Warning:** It seems that Puppeteer element screenshot works differently when running with `headless: false`. Use with caution!
 
 ```bash
 squint screenshot --puppeteer-launch-options '{ headless: false }' https://example.com

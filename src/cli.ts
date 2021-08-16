@@ -7,7 +7,7 @@ export function formatHelp(defaultConfig: typeof _defaultConfig) {
   const helpMessage = chalk`
   {bold EXAMPLES}
 
-      Compare beta to current production. The whole site is automatically crawled.
+      Compare current production to beta. The whole site is automatically crawled.
       {dim $ squint compare https://example.com https://beta.example.com}
 
       Crawl all paths from beta site and pipe output to a file. The crawler only follows site-internal links.
@@ -19,7 +19,7 @@ export function formatHelp(defaultConfig: typeof _defaultConfig) {
       Get screenshot of a single element in a page.
       {dim $ squint screenshot --selector 'div' https://beta.example.com}
 
-      Compare beta to current production, but use an existing file of paths.
+      Compare current production to beta, but use an existing file of paths.
       {dim $ squint compare --paths-file paths.txt https://example.com https://beta.example.com}
 
       Compare a single page.
