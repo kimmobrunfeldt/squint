@@ -5,6 +5,7 @@ import _ from 'lodash'
 import PQueue from 'p-queue'
 import { Config } from '../config'
 import chalk from 'chalk'
+import { union } from '../utils'
 
 function normalizeUrl(
   url: string,
@@ -82,12 +83,16 @@ export async function crawlPaths(
         const isCorrectProtocol = ['http:', 'https:'].includes(
           resolvedHrefParts.protocol
         )
-        const shouldVisitResult = shouldVisit(
-          resolvedHref,
-          { currentUrl: url, href },
-          memory.visited
-        )
-        if (shouldVisitResult && isCorrectProtocol && !isVisitedAlready) {
+        const shouldVisitResult =
+          isCorrectProtocol &&
+          !isVisitedAlready &&
+          shouldVisit(
+            resolvedHref,
+            { currentUrl: url, href },
+            union(memory.visited, newUrlsToVisit)
+          )
+
+        if (shouldVisitResult) {
           newUrlsToVisit.add(resolvedHref)
         }
       })

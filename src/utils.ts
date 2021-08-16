@@ -54,3 +54,11 @@ export async function mkdirp(dir: string) {
     // ignore
   }
 }
+
+export function union<T>(setA: Set<T>, setB: Set<T>) {
+  const _union = new Set(setA)
+  for (const elem of setB) {
+    _union.add(elem)
+  }
+  return _union
+}

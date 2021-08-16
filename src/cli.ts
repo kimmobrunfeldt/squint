@@ -34,33 +34,29 @@ export function formatHelp(defaultConfig: typeof _defaultConfig) {
   {bold COMMON OPTIONS}
 
       --help                       Shows this help message
-      --include-hash               When enabled, URL hashes are not ignored when crawling. Default: ${
-        defaultConfig.includeHash
-      }
-      --include-search-query       When enabled, URL search queries are not ignored when crawling. Default: ${
-        defaultConfig.includeSearchQuery
-      }
-      --should-visit               Custom JS that can limit which links crawler follows.
-                                   This is an AND filter on top of all other filters.
-                                   (
-                                     urlToVisit: url.URL,
-                                     hrefDetails: { currentUrl: string, href: string },
-                                     visited: Set<string>,
-                                     config: Config
-                                   ) => boolean
-      --trailing-slash-mode        Options: preserve, remove, add. Default: ${
-        defaultConfig.trailingSlashMode
-      }
       --puppeteer-launch-mode      Options: launch, connect. Default: ${
         defaultConfig.puppeteerLaunchMode.type
       }
       --puppeteer-launch-options   Puppeteer .launch or .connect options in JS. Default: ${JSON.stringify(
         defaultConfig.puppeteerLaunchMode.options
       )}
-      --after-goto                 Custom JS code that will be run after Puppeteer page.goto has been called.
-                                   (page: Puppeteer.Page) => Promise<void>
-      --after-page                 Custom JS code that will be run after Puppeteer page has been created.
-                                   (page: Puppeteer.Page) => Promise<void>
+      --include-hash               When enabled, URL hashes are not ignored when crawling. Default: ${
+        defaultConfig.includeHash
+      }
+      --include-search-query       When enabled, URL search queries are not ignored when crawling. Default: ${
+        defaultConfig.includeSearchQuery
+      }
+      --should-visit               Custom JS function that can limit which links the crawler follows.
+                                   This is an AND filter on top of all other filters.
+                                   (
+                                     urlToVisit: url.URL,
+                                     hrefDetails: \{ currentUrl: string, href: string \},
+                                     visited: Set<string>,
+                                     config: Config
+                                   ) => boolean
+      --trailing-slash-mode        Options: preserve, remove, add. Default: ${
+        defaultConfig.trailingSlashMode
+      }
 
   {bold COMPARE & SCREENSHOT}
 
@@ -71,10 +67,15 @@ export function formatHelp(defaultConfig: typeof _defaultConfig) {
         defaultConfig.height
       }
       --paths-file           File of URL paths. One path per line.
-      --selector             Selector for document.querySelector. The first found element is used.
+      --selector             Takes screenshot from a single element. Selector for document.querySelector.
                              page.waitForSelector is called to ensure the element is visible.
-      --selector-js          Selector that uses JS to dig an element. (page: Puppeteer.Page) => HTMLElement
+      --selector-js          Takes screenshot from a single element. Selector as JS function that digs an element.
+                             (page: Puppeteer.Page) => HTMLElement
       --screenshot-options   Puppeteer .screenshot options in JS. Overrides other options.
+      --after-goto           Custom JS function that will be run after Puppeteer page.goto has been called.
+                             (page: Puppeteer.Page) => Promise<void>
+      --after-page           Custom JS function that will be run after Puppeteer page has been created.
+                             (page: Puppeteer.Page) => Promise<void>
 
   {bold COMPARE}
 

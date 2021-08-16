@@ -84,25 +84,34 @@ kill $PID
   COMMON OPTIONS
 
       --help                       Shows this help message
-      --include-hash               When enabled, URL hashes are not ignored when crawling. Default: false
-      --include-search-query       When enabled, URL search queries are not ignored when crawling. Default: false
-      --trailing-slash-mode        Options: preserve, remove, add. Default: preserve
       --puppeteer-launch-mode      Options: launch, connect. Default: launch
       --puppeteer-launch-options   Puppeteer .launch or .connect options in JS. Default: {"headless":true}
-      --after-goto                 Custom JS code that will be run after Puppeteer page.goto has been called.
-                                   (page: Puppeteer.Page) => Promise<void>
-      --after-page                 Custom JS code that will be run after Puppeteer page has been created.
-                                   (page: Puppeteer.Page) => Promise<void>
+      --include-hash               When enabled, URL hashes are not ignored when crawling. Default: false
+      --include-search-query       When enabled, URL search queries are not ignored when crawling. Default: false
+      --should-visit               Custom JS function that can limit which links the crawler follows.
+                                   This is an AND filter on top of all other filters.
+                                   (
+                                     urlToVisit: url.URL,
+                                     hrefDetails: { currentUrl: string, href: string },
+                                     visited: Set<string>,
+                                     config: Config
+                                   ) => boolean
+      --trailing-slash-mode        Options: preserve, remove, add. Default: preserve
 
   COMPARE & SCREENSHOT
 
       -w --width             Viewport width for Puppeteer. Default: 1280
       -h --height            Viewport height for Puppeteer. Default: 800
       --paths-file           File of URL paths. One path per line.
-      --selector             Selector for document.querySelector. The first found element is used.
+      --selector             Takes screenshot from a single element. Selector for document.querySelector.
                              page.waitForSelector is called to ensure the element is visible.
-      --selector-js          Selector that uses JS to dig an element. (page: Puppeteer.Page) => HTMLElement
+      --selector-js          Takes screenshot from a single element. Selector as JS function that digs an element.
+                             (page: Puppeteer.Page) => HTMLElement
       --screenshot-options   Puppeteer .screenshot options in JS. Overrides other options.
+      --after-goto           Custom JS function that will be run after Puppeteer page.goto has been called.
+                             (page: Puppeteer.Page) => Promise<void>
+      --after-page           Custom JS function that will be run after Puppeteer page has been created.
+                             (page: Puppeteer.Page) => Promise<void>
 
   COMPARE
 
@@ -149,17 +158,42 @@ DEBUG="puppeteer:* squint screenshot https://example.com
 squint screenshot --puppeteer-launch-options '{ headless: false }' https://example.com
 ```
 
-### Interact with page before screenshot
+### Customize crawler
 
-Click "I agree" button to hide ToS popup before taking a screenshot. *Beware of character escaping, it's fragile.*
+`--should-visit` can be useful if your page has a ton of blog posts:
 
 ```bash
-squint screenshot https://google.com --puppeteer-launch-options '{ headless: false }' --after-goto 'async (page) => {
-  const [button] = await page.$x(`//button[contains(., "I agree")]`);
-  await button.click();
+squint crawl https://mysite.com --should-visit '(urlToVisit, hrefDetails, visited) => {
+  // Only visit 2 blog posts at max, assuming your site uses structure: /blog/posts/:id
+  const isBlogPost = (url) => url.includes("/blog/posts/");
+
+  if (!isBlogPost(urlToVisit.toString())) {
+    // Visit if something else than blog post
+    return true;
+  }
+
+  // If the visited list has 0 or 1 visits to a post,
+  // we should still visit one post.
+  return [...visited].filter(url => isBlogPost(url)).length <= 1;
 }'
 ```
 
+`urlToVisit` is a [WHATWG URL](https://nodejs.org/api/url.html#url_new_url_input_base) object.
+The flag also works for `compare` command.
+
+### Debugging JS arguments
+
+You can use regular JS console.log for the incoming parameters, for example for `--should-visit`:
+
+```bash
+squint crawl https://myapp.com --should-visit '(...args) => console.log(...args) || true'
+```
+
+### Disable headless mode
+
+```bash
+squint screenshot --puppeteer-launch-options '{ headless: false }' https://example.com
+```
 
 ## Maintenance tasks
 
