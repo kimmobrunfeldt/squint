@@ -147,6 +147,14 @@ Got a trick? Submit a PR!
 3. `squint screenshot --puppeteer-launch-mode connect --puppeteer-launch-options '{ browserURL: "http://localhost:9222" }' https://example.com`
 
 
+### Disable full page screenshot
+
+Take screenshot from the current viewport:
+
+```bash
+squint screenshot https://github.com/kimmobrunfeldt/squint --screenshot-options '{ fullPage: false }';
+```
+
 ### Enable very verbose Puppeteer logging
 
 ```bash
