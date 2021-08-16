@@ -64,43 +64,45 @@ export async function crawlPaths(
   const queue = new PQueue()
   const newUrlsToVisit: Set<string> = new Set()
 
-  urlsToVisit.forEach((url) => {
-    const visitTask = async () => {
-      const hrefs = await pagePool.use(async (page) => {
-        await page.goto(url, { waitUntil: 'networkidle2' })
-        return page.$$eval('a', (as) =>
-          (as as HTMLAnchorElement[]).map((a) => a.href)
-        )
-      })
+  // Stop following links if max depth has been reached already
+  const maxLinkDepthReached = memory.depth >= maxDepth
+  if (!maxLinkDepthReached) {
+    urlsToVisit.forEach((url) => {
+      const visitTask = async () => {
+        const hrefs = await pagePool.use(async (page) => {
+          await page.goto(url, { waitUntil: 'networkidle2' })
+          return page.$$eval('a', (as) =>
+            (as as HTMLAnchorElement[]).map((a) => a.href)
+          )
+        })
 
-      console.error(chalk.dim`Visited ${url}`)
+        console.error(chalk.dim`Visited ${url}`)
 
-      if (memory.depth >= maxDepth) {
-        // Stop following links if max depth has been reached already
-        return
+        hrefs.forEach((href) => {
+          const resolvedHrefParts = new URL(href, url)
+          const resolvedHref = normalizeUrl(
+            resolvedHrefParts.toString(),
+            inputs
+          )
+          const isVisitedAlready = memory.visited.has(resolvedHref)
+          const isCorrectProtocol = ['http:', 'https:'].includes(
+            resolvedHrefParts.protocol
+          )
+          const shouldVisitResult =
+            isCorrectProtocol &&
+            !isVisitedAlready &&
+            shouldVisit(resolvedHref, { currentUrl: url, href }, memory.visited)
+
+          if (shouldVisitResult) {
+            newUrlsToVisit.add(resolvedHref)
+            memory.visited.add(resolvedHref)
+          }
+        })
       }
 
-      hrefs.forEach((href) => {
-        const resolvedHrefParts = new URL(href, url)
-        const resolvedHref = normalizeUrl(resolvedHrefParts.toString(), inputs)
-        const isVisitedAlready = memory.visited.has(resolvedHref)
-        const isCorrectProtocol = ['http:', 'https:'].includes(
-          resolvedHrefParts.protocol
-        )
-        const shouldVisitResult =
-          isCorrectProtocol &&
-          !isVisitedAlready &&
-          shouldVisit(resolvedHref, { currentUrl: url, href }, memory.visited)
-
-        if (shouldVisitResult) {
-          newUrlsToVisit.add(resolvedHref)
-          memory.visited.add(resolvedHref)
-        }
-      })
-    }
-
-    queue.add(visitTask)
-  })
+      queue.add(visitTask)
+    })
+  }
 
   await queue.onIdle()
 
