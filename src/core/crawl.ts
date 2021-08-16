@@ -52,10 +52,15 @@ type CrawlInternalMemory = {
 // Breadth-first traversal of urls
 export async function crawlPaths(
   inputs: CrawlInputs,
-  memory: CrawlInternalMemory = { visited: new Set<string>(), depth: 0 }
+  memory: CrawlInternalMemory = {
+    visited: new Set<string>(inputs.urlsToVisit),
+    depth: 0,
+  }
 ): Promise<Array<string>> {
   const { pagePool, urlsToVisit, shouldVisit = () => true, maxDepth } = inputs
 
+  // Remember that memory is shared between the tasks that run concurrently
+  // with PQueue
   const queue = new PQueue()
   const newUrlsToVisit: Set<string> = new Set()
 
@@ -68,8 +73,7 @@ export async function crawlPaths(
         )
       })
 
-      console.error(chalk.dim`Visited ${normalizeUrl(url, inputs)}`)
-      memory.visited.add(normalizeUrl(url, inputs))
+      console.error(chalk.dim`Visited ${url}`)
 
       if (memory.depth >= maxDepth) {
         // Stop following links if max depth has been reached already
@@ -86,14 +90,11 @@ export async function crawlPaths(
         const shouldVisitResult =
           isCorrectProtocol &&
           !isVisitedAlready &&
-          shouldVisit(
-            resolvedHref,
-            { currentUrl: url, href },
-            union(memory.visited, newUrlsToVisit)
-          )
+          shouldVisit(resolvedHref, { currentUrl: url, href }, memory.visited)
 
         if (shouldVisitResult) {
           newUrlsToVisit.add(resolvedHref)
+          memory.visited.add(resolvedHref)
         }
       })
     }
