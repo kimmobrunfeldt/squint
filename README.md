@@ -1,3 +1,5 @@
+[![NPM](https://nodei.co/npm/squint-cli.png?compact=true)](https://npmjs.org/package/squint-cli)
+
 [![Status badge](https://github.com/kimmobrunfeldt/squint/actions/workflows/test.yml/badge.svg?branch=main)](https://github.com/kimmobrunfeldt/squint/actions?query=branch%3Amain)
 
 # Squint
