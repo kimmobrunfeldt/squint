@@ -36,6 +36,8 @@ async function main() {
 
   if (config.puppeteerLaunchMode.type === 'launch') {
     await browser.close()
+  } else {
+    browser.disconnect()
   }
 }
 
